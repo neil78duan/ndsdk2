@@ -1,0 +1,97 @@
+#make file 
+
+include $(NDHOME)/src/Rules.make
+
+obj1 = $(shell ls $(TOPDIR)/src/nd_common/obj | grep '\.o\>')
+OBJS_SRV := $(addprefix $(TOPDIR)/src/nd_common/obj/,$(obj1) )
+OBJ_CLIENT := $(addprefix $(TOPDIR)/src/nd_common/obj/,$(obj1) )
+OBJ_COMMON := $(addprefix $(TOPDIR)/src/nd_common/obj/,$(obj1) )
+
+obj1 = $(shell ls $(TOPDIR)/src/nd_net/obj | grep '\.o\>')
+OBJS_SRV += $(addprefix $(TOPDIR)/src/nd_net/obj/,$(obj1) )
+OBJ_CLIENT += $(addprefix $(TOPDIR)/src/nd_net/obj/,$(obj1) )
+
+obj1 = $(shell ls $(TOPDIR)/src/nd_crypt/obj | grep '\.o\>')
+OBJS_SRV += $(addprefix $(TOPDIR)/src/nd_crypt/obj/,$(obj1) )
+OBJ_CLIENT += $(addprefix $(TOPDIR)/src/nd_crypt/obj/,$(obj1) )
+OBJ_COMMON += $(addprefix $(TOPDIR)/src/nd_crypt/obj/,$(obj1) )
+
+obj1 = $(shell ls $(TOPDIR)/src/nd_srvcore/obj | grep '\.o\>')
+OBJS_SRV += $(addprefix $(TOPDIR)/src/nd_srvcore/obj/,$(obj1) )
+
+obj1 = $(shell ls $(TOPDIR)/src/nd_vm/obj | grep '\.o\>')
+OBJS_SRV += $(addprefix $(TOPDIR)/src/nd_vm/obj/,$(obj1) )
+OBJ_COMMON += $(addprefix $(TOPDIR)/src/nd_vm/obj/,$(obj1) )
+OBJ_CLIENT +=  $(addprefix $(TOPDIR)/src/nd_vm/obj/,$(obj1) )
+
+obj1 = $(shell ls $(TOPDIR)/src/ndapplib/obj | grep '\.o\>')
+OBJS_SRV += $(addprefix $(TOPDIR)/src/ndapplib/obj/,$(obj1) )
+
+obj1 = $(shell ls $(TOPDIR)/src/ndclient/obj | grep '\.o\>')
+OBJ_CLIENT += $(addprefix $(TOPDIR)/src/ndclient/obj/,$(obj1) )
+
+OBJ_CLIENT += $(TOPDIR)/src/ndapplib/obj/nd_msgpack.o
+OBJ_CLIENT += $(TOPDIR)/src/ndapplib/obj/nd_baseConn.o
+OBJ_CLIENT += $(TOPDIR)/src/ndapplib/obj/nd_object.o
+OBJ_CLIENT += $(TOPDIR)/src/ndapplib/obj/nd_connector.o
+OBJ_CLIENT += $(TOPDIR)/src/ndapplib/obj/nd_vartype.o
+OBJ_CLIENT += $(TOPDIR)/src/ndapplib/obj/nd_protoStream.o
+OBJ_CLIENT += $(TOPDIR)/src/ndapplib/obj/nd_version.o
+
+OBJ_COMMON += $(TOPDIR)/src/ndapplib/obj/nd_vartype.o
+OBJ_COMMON += $(TOPDIR)/src/ndapplib/obj/nd_protoStream.o
+OBJ_COMMON += $(TOPDIR)/src/ndapplib/obj/nd_version.o
+
+##############set flag
+
+
+######################
+
+
+ifeq ($(BUILD_DLL),y)
+	
+	DLL_OBJS = $(ND_SRV_DLL) $(ND_CLIENT_DLL) $(ND_COMMON_DLL)
+	ALL_PROJS = $(DLL_OBJS)
+
+	LOCAL_CFLAG =  $(CFLAGS) -fPIC
+else
+
+	ALL_PROJS = $(ND_SRV_LIB) $(ND_CLIENT_LIB) $(ND_COMMON_LIB)
+
+	LOCAL_CFLAG =  $(CFLAGS)
+endif
+
+
+##########make 
+##############################################################
+
+
+all: $(ALL_PROJS)
+	
+$(ND_SRV_LIB): $(OBJS_SRV)
+	$(AR) $(ND_SRV_LIB)  $(OBJS_SRV)
+
+$(ND_CLIENT_LIB): $(OBJ_CLIENT)
+	$(AR) $(ND_CLIENT_LIB)  $(OBJ_CLIENT)
+
+$(ND_COMMON_LIB): $(OBJ_COMMON)
+	$(AR) $(ND_COMMON_LIB)  $(OBJ_COMMON)
+
+# DLL
+$(ND_SRV_DLL): $(OBJS_SRV)
+	$(CPP_DLL) -fPIC -o $(ND_SRV_DLL)  $(OBJS_SRV) $(LFLAGS) -liconv
+
+$(ND_CLIENT_DLL): $(OBJ_CLIENT)
+	$(CPP_DLL) -fPIC -o $(ND_CLIENT_DLL) $(OBJ_CLIENT) $(LFLAGS) -liconv
+
+$(ND_COMMON_DLL): $(OBJ_COMMON)
+	$(CPP_DLL) -fPIC -o $(ND_COMMON_DLL) $(OBJ_COMMON) $(LFLAGS) -liconv
+
+clean:
+	rm -f $(ALL_PROJS) $(DLL_OBJS)
+	
+
+###############create dependence file #############
+.PHONY: clean
+
+#############################################################

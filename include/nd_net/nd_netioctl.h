@@ -1,0 +1,87 @@
+/* file nd_netioctl.h
+ *
+ * define ioctl function 
+ *
+ * create by duan 
+ *
+ * 2013/1/3 10:30:37
+ *
+ */
+
+#ifndef _ND_NETIOCTL_H_
+#define _ND_NETIOCTL_H_
+
+//command of 
+// define fro function int nd_net_ioctl(nd_netui_handle  socket_node, int cmd, void *val, int *size) 
+// usage:
+/*
+	NDUINT32 val = 1024*1024;
+	int size = sizeof(val) ;
+	m_conns.Ioctl(NDIOCTL_SET_SENDVBUF,&val, &size) ;
+ */
+enum ND_IOCTRL_CMD
+{
+	NDIOCTL_SET_BLOCK = 1 ,		//set block/unblock 0 is block, 1 is block
+	NDIOCTL_GET_BLOCK  ,		//get block/unblocc status
+	NDIOCTL_SET_SENDVBUF,		// set send buffer
+	NDIOCTL_GET_SENDBUF,		//
+	NDIOCTL_SET_RECVVBUF,		//get send buffer
+	NDIOCTL_GET_RECVBUF,
+	NDIOCTL_SET_TCP_RECV_WNDSIZE,		//TCP SYSTEM window size
+	NDIOCTL_GET_TCP_RECV_WNDSIZE,
+	NDIOCTL_SET_TCP_SEND_WNDSIZE,
+	NDIOCTL_GET_TCP_SEND_WNDSIZE,
+	NDIOCTL_SET_TIMEOUT,				// set time out
+	NDIOCTL_GET_TIMEOUT,
+	NDIOCTL_GET_RECV_PACK_NUM,			//set package number log 
+	NDIOCTL_SET_RECV_PACK_NUM,
+	NDIOCTL_GET_SEND_PACK_NUM,
+	NDIOCTL_SET_SEND_PACK_NUM,
+    NDIOCTL_GET_LAST_RECV_TIME,
+    NDIOCTL_GET_LAST_SEND_TIME,
+    NDIOCTL_GET_USERDATA,
+    NDIOCTL_SET_USERDATA,
+    
+    NDIOCTL_GET_PEER_IP,
+    NDIOCTL_GET_PEER_PORT,
+    NDIOCTL_HOOK_DATA,
+    NDIOCTL_HOOK_PACKET,
+    NDIOCTL_SET_UNREG_MSG_CLOSED, //close peers when received unregister message
+    NDIOCTL_SET_UNAUTHORIZE_CLOSE, // unauthorize
+    
+    NDIOCTL_SET_CRYPT_KEY,
+    NDIOCTL_GET_CRYPT_KEY,
+    
+    NDIOCTL_GET_LEVEL,
+    NDIOCTL_SET_LEVEL,
+
+	NDIOCTL_GET_SESSIONID,
+	NDIOCTL_SET_SESSIONID,
+
+	NDIOCTL_GET_WRITABLE_CALLBACK,
+	NDIOCTL_SET_WRITABLE_CALLBACK,
+	
+	NDIOCTL_GET_WRITABLE_CALLBACK_PARAM,
+	NDIOCTL_SET_WRITABLE_CALLBACK_PARAM,
+
+	NDIOCTL_LOG_SEND_MSG,
+	NDIOCTL_LOG_RECV_MSG,
+
+	NDIOCTL_SYS_SET_LOG_FUNC,
+	NDIOCTL_SYS_GET_LOG_FUNC,
+	
+	NDIOCTL_LOG_SEND_STRAM_FILE, //write send-stream to bin-file
+	NDIOCTL_LOG_RECV_STRAM_FILE, //write recv-stream to bin-file
+
+	NDIOCTL_UNLIMITED_SEND_WNDSIZE ,
+	NDIOCTL_UNLIMITED_RECV_WNDSIZE,
+
+	NDIOCTL_NUMBER						//cmd number
+};
+
+
+#define ND_STREAM_MESSAGE_START 0x7f7f
+#define ND_STREAM_MESSAGE_END 0x7c7c
+
+#endif
+ 

@@ -1,0 +1,14 @@
+# ignore obj 
+*.[odOD]
+.vs
+obj
+*.log
+.DS_Store
+bin
+bin64
+lib
+lib64
+libs
+xcuserdata
+build
+
