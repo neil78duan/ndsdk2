@@ -24,7 +24,7 @@ CFLAGS += -I$(TOPDIR)/include
 
 VPATH :=  $(SRCDIR)  $(OBJDIR)
 
-SRC := $( ls | grep '\.c\>'	)
+SRC := $(shell ls | grep '\.c\>'	)
 
 
 OBJS := $(patsubst %.c, %.o,$(SRC) )  $(patsubst %.cpp, %.o,$(SRC) )

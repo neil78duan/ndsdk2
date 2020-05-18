@@ -24,7 +24,7 @@ CFLAGS += -I$(TOPDIR)/include
 
 VPATH :=  $(SRCDIR)  $(OBJDIR) 
 
-SRC := $(ls | grep '\.c\>'	)
+SRC := $(shell ls | grep '\.c\>'	)
 OBJS := $(patsubst %.c, %.o,$(SRC) )  $(patsubst %.cpp, %.o,$(SRC) )
 PathOBJS :=$(patsubst %.c, $(OBJDIR)/%.o, $(SRC) ) 
 
@@ -54,6 +54,7 @@ endif
 #	$(AR) $(PROJS)  $(PathOBJS)  
 
 all : $(OBJS)
+	echo begin compile : $(SRC)
 
 $(DLLPROJS): $(OBJS)
 	$(CC_DLL) -fPIC -o $(DLLPROJS)  $(PathOBJS) $(LibFLAGS) -liconv

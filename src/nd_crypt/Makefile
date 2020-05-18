@@ -20,7 +20,7 @@ CFLAGS += -I$(TOPDIR)/include -I$(TOPDIR)/include/nd_crypt/rsah -I$(TOPDIR)/incl
 
 VPATH := $(SRCDIR)  $(OBJDIR) ./rsa
 
-SRC := $(ls | grep '\.c\>'	)
+SRC := $(shell ls | grep '\.c\>'	)
 
 
 OBJS := $(patsubst %.c, %.o,$(SRC) )  $(patsubst %.cpp, %.o,$(SRC) )
