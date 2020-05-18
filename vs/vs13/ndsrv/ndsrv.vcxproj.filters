@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\net">
-      <UniqueIdentifier>{1030840b-a7da-46b8-9721-7fed3d807733}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\ndapplib">
       <UniqueIdentifier>{bec50d46-e9b7-48ac-b767-50a217c5a4da}</UniqueIdentifier>
     </Filter>
@@ -43,47 +40,14 @@
     <Filter Include="Header Files\srvcore">
       <UniqueIdentifier>{f7fa491c-05f8-4119-b55d-4786130f4118}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\srvcoe\iocp">
+      <UniqueIdentifier>{a5042c5d-139d-4b23-af12-7bd27102cff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nd_net">
+      <UniqueIdentifier>{052b3be9-4cc3-4a3e-8e3c-e8d15e8aef45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\nd_net\src\ipraw.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_msgentry.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_net.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_netobj.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_netui.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_socket.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_tcp.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_udp.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\net_srv.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\proxy_cli.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\udt_net.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\udt_socket.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_net\src\udt_srv.c">
-      <Filter>Source Files\net</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\ndapplib\httpParser.cpp">
       <Filter>Source Files\ndapplib</Filter>
     </ClCompile>
@@ -153,37 +117,85 @@
     <ClCompile Include="..\..\..\src\ndapplib\nd_vartype.cpp">
       <Filter>Source Files\ndapplib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_thmsg.c">
-      <Filter>Source Files\srvcoe</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\session.c">
-      <Filter>Source Files\srvcoe</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\udp_listen.c">
-      <Filter>Source Files\srvcoe</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\nd_srvcore\win_iocp\nd_iocp.c">
-      <Filter>Source Files\srvcoe</Filter>
+      <Filter>Source Files\srvcoe\iocp</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_srvcore\win_iocp\thread_iocp.c">
+      <Filter>Source Files\srvcoe\iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_epoll.c">
       <Filter>Source Files\srvcoe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_srvobj.c">
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_listenth.c">
       <Filter>Source Files\srvcoe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_listenth.c">
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_srvlib.c">
       <Filter>Source Files\srvcoe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_srvlib.c">
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_srvobj.c">
       <Filter>Source Files\srvcoe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_thread.c">
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_thmsg.c">
       <Filter>Source Files\srvcoe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_thread.c">
+      <Filter>Source Files\srvcoe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_srvcore\session.c">
+      <Filter>Source Files\srvcoe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_srvcore\udp_listen.c">
+      <Filter>Source Files\srvcoe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\ipraw.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\nd_msgentry.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\nd_net.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\nd_netobj.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\nd_netui.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\nd_socket.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\nd_tcp.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\nd_udp.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\net_srv.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\proxy_cli.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\udt_net.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\udt_socket.c">
+      <Filter>Source Files\nd_net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_net\udt_srv.c">
+      <Filter>Source Files\nd_net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\src\ndapplib\Makefile">
       <Filter>Source Files\ndapplib</Filter>
+    </None>
+    <None Include="..\..\..\src\nd_srvcore\Makefile">
+      <Filter>Source Files\srvcoe</Filter>
+    </None>
+    <None Include="..\..\..\src\nd_net\Makefile">
+      <Filter>Source Files\nd_net</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -463,9 +475,6 @@
     <ClInclude Include="..\..\..\include\ndapplib\nd_vartype.h">
       <Filter>Header Files\ndapplib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nd_srvcore\win_iocp\nd_iocp.h">
-      <Filter>Source Files\srvcoe</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\nd_srvcore\nd_epoll.h">
       <Filter>Header Files\srvcore</Filter>
     </ClInclude>
@@ -486,6 +495,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\nd_srvcore\nd_threadmsgid.h">
       <Filter>Header Files\srvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\nd_srvcore\win_iocp\nd_iocp.h">
+      <Filter>Source Files\srvcoe\iocp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

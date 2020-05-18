@@ -142,12 +142,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_str.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_asm.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_formula.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_vm.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_vmdbg.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_vmmain.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_str.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_asm.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_formula.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_vm.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_vmdbg.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_vmmain.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\nd_vm\Makefile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\src\nd_vm\ndasm.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

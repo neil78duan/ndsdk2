@@ -20,10 +20,13 @@
       <UniqueIdentifier>{bb9186f3-db1f-4a41-99dd-42e154973fa1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\common">
-      <UniqueIdentifier>{cb8c2167-d2a6-474d-bf32-4cab8281ca7c}</UniqueIdentifier>
+      <UniqueIdentifier>{5dcae26d-2831-401b-b5a4-6df7e1ea06d3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\nd_crypt">
-      <UniqueIdentifier>{8147654d-9c27-4d51-be30-3791e23e0939}</UniqueIdentifier>
+      <UniqueIdentifier>{fc76cf8e-b8e9-45a6-820c-02d4c4e55c9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nd_crypt\rsa">
+      <UniqueIdentifier>{8c1b1c9e-f1fa-4f60-97c9-d55b7b195264}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -119,119 +122,130 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\nd_common\src\bintree.c">
+    <ClCompile Include="..\..\..\src\nd_common\bintree.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\callstack.c">
+    <ClCompile Include="..\..\..\src\nd_common\callstack.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\common.c">
+    <ClCompile Include="..\..\..\src\nd_common\cJSON.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nddir.c">
+    <ClCompile Include="..\..\..\src\nd_common\common.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_cmdline.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_cmdline.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_handle.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_handle.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_iconv.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_iconv.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_logger.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_logger.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_mempool.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_mempool.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_mutex.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_mutex.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_static_alloc.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_static_alloc.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_str.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_str.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_time.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_time.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_timer.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_timer.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_trace.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_trace.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_unix.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_unix.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_win.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_win.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_xml.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_xml.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\node_mgr.c">
+    <ClCompile Include="..\..\..\src\nd_common\nddir.c">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\recbuf.c">
+    <ClCompile Include="..\..\..\src\nd_common\node_mgr.c">
       <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_common\recbuf.c">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_crypt\nd_cryptfile.c">
+      <Filter>Source Files\nd_crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_crypt\nd_pubkey.c">
+      <Filter>Source Files\nd_crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_crypt\ndcrypt.c">
+      <Filter>Source Files\nd_crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_crypt\ndrsa.c">
+      <Filter>Source Files\nd_crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_crypt\tea.c">
+      <Filter>Source Files\nd_crypt</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\desc.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\digit.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\md2c.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\md5c.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\nn.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\prime.c">
-      <Filter>Source Files\nd_crypt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_crypt\rsa\rsa.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\r_dh.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\r_encode.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\r_enhanc.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\r_keygen.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\r_random.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\r_stdlib.c">
-      <Filter>Source Files\nd_crypt</Filter>
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_crypt\src\ndcrypt.c">
-      <Filter>Source Files\nd_crypt</Filter>
+    <ClCompile Include="..\..\..\src\nd_crypt\rsa\rsa.c">
+      <Filter>Source Files\nd_crypt\rsa</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_crypt\src\ndrsa.c">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\nd_common\Makefile">
+      <Filter>Source Files\common</Filter>
+    </None>
+    <None Include="..\..\..\src\nd_crypt\Makefile">
       <Filter>Source Files\nd_crypt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_crypt\src\nd_cryptfile.c">
-      <Filter>Source Files\nd_crypt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_crypt\src\nd_pubkey.c">
-      <Filter>Source Files\nd_crypt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_crypt\src\tea.c">
-      <Filter>Source Files\nd_crypt</Filter>
-    </ClCompile>
+    </None>
   </ItemGroup>
 </Project>

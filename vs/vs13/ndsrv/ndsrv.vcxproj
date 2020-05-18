@@ -170,31 +170,34 @@ copy /Y  $(OutDir)$(TargetName).pdb  ..\..\..\..\nodeflow\bin</Command>
     <ClCompile Include="..\..\..\src\ndapplib\nd_version.cpp" />
     <ClCompile Include="..\..\..\src\ndapplib\readcfg.cpp" />
     <ClCompile Include="..\..\..\src\ndapplib\unix_sig.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\ipraw.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_msgentry.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_net.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_netobj.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_netui.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_socket.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_tcp.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\nd_udp.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\net_srv.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\proxy_cli.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\udt_net.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\udt_socket.c" />
-    <ClCompile Include="..\..\..\src\nd_net\src\udt_srv.c" />
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_listenth.c" />
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_srvlib.c" />
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_srvobj.c" />
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_thmsg.c" />
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\nd_thread.c" />
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\session.c" />
-    <ClCompile Include="..\..\..\src\nd_srvcore\src\udp_listen.c" />
+    <ClCompile Include="..\..\..\src\nd_net\ipraw.c" />
+    <ClCompile Include="..\..\..\src\nd_net\nd_msgentry.c" />
+    <ClCompile Include="..\..\..\src\nd_net\nd_net.c" />
+    <ClCompile Include="..\..\..\src\nd_net\nd_netobj.c" />
+    <ClCompile Include="..\..\..\src\nd_net\nd_netui.c" />
+    <ClCompile Include="..\..\..\src\nd_net\nd_socket.c" />
+    <ClCompile Include="..\..\..\src\nd_net\nd_tcp.c" />
+    <ClCompile Include="..\..\..\src\nd_net\nd_udp.c" />
+    <ClCompile Include="..\..\..\src\nd_net\net_srv.c" />
+    <ClCompile Include="..\..\..\src\nd_net\proxy_cli.c" />
+    <ClCompile Include="..\..\..\src\nd_net\udt_net.c" />
+    <ClCompile Include="..\..\..\src\nd_net\udt_socket.c" />
+    <ClCompile Include="..\..\..\src\nd_net\udt_srv.c" />
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_epoll.c" />
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_listenth.c" />
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_srvlib.c" />
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_srvobj.c" />
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_thmsg.c" />
+    <ClCompile Include="..\..\..\src\nd_srvcore\nd_thread.c" />
+    <ClCompile Include="..\..\..\src\nd_srvcore\session.c" />
+    <ClCompile Include="..\..\..\src\nd_srvcore\udp_listen.c" />
     <ClCompile Include="..\..\..\src\nd_srvcore\win_iocp\nd_iocp.c" />
     <ClCompile Include="..\..\..\src\nd_srvcore\win_iocp\thread_iocp.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\src\ndapplib\Makefile" />
+    <None Include="..\..\..\src\nd_net\Makefile" />
+    <None Include="..\..\..\src\nd_srvcore\Makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\ndapplib\applib.h" />

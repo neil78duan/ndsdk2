@@ -11,7 +11,7 @@ typedef struct netui_info *nd_handle;
 
 #include "nd_srvcore/nd_srvlib.h"
 #if !defined(ND_UNIX) 
-#include "../win_iocp/nd_iocp.h"
+#include "win_iocp/nd_iocp.h"
 #endif 
 
 

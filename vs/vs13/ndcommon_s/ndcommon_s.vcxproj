@@ -194,27 +194,31 @@
     <ClInclude Include="..\..\..\include\nd_vm\nd_vm.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\nd_common\src\bintree.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\callstack.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\cJSON.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\common.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nddir.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_cmdline.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_handle.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_iconv.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_logger.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_mempool.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_mutex.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_static_alloc.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_str.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_time.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_timer.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_trace.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_unix.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_win.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_xml.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\node_mgr.c" />
-    <ClCompile Include="..\..\..\src\nd_common\src\recbuf.c" />
+    <ClCompile Include="..\..\..\src\nd_common\bintree.c" />
+    <ClCompile Include="..\..\..\src\nd_common\callstack.c" />
+    <ClCompile Include="..\..\..\src\nd_common\cJSON.c" />
+    <ClCompile Include="..\..\..\src\nd_common\common.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nddir.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_cmdline.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_handle.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_iconv.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_logger.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_mempool.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_mutex.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_static_alloc.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_str.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_time.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_timer.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_trace.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_unix.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_win.c" />
+    <ClCompile Include="..\..\..\src\nd_common\nd_xml.c" />
+    <ClCompile Include="..\..\..\src\nd_common\node_mgr.c" />
+    <ClCompile Include="..\..\..\src\nd_common\recbuf.c" />
+    <ClCompile Include="..\..\..\src\nd_crypt\ndcrypt.c" />
+    <ClCompile Include="..\..\..\src\nd_crypt\ndrsa.c" />
+    <ClCompile Include="..\..\..\src\nd_crypt\nd_cryptfile.c" />
+    <ClCompile Include="..\..\..\src\nd_crypt\nd_pubkey.c" />
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\desc.c" />
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\digit.c" />
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\md2c.c" />
@@ -228,16 +232,20 @@
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\r_keygen.c" />
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\r_random.c" />
     <ClCompile Include="..\..\..\src\nd_crypt\rsa\r_stdlib.c" />
-    <ClCompile Include="..\..\..\src\nd_crypt\src\ndcrypt.c" />
-    <ClCompile Include="..\..\..\src\nd_crypt\src\ndrsa.c" />
-    <ClCompile Include="..\..\..\src\nd_crypt\src\nd_cryptfile.c" />
-    <ClCompile Include="..\..\..\src\nd_crypt\src\nd_pubkey.c" />
-    <ClCompile Include="..\..\..\src\nd_crypt\src\tea.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_asm.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_formula.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_vm.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_vmdbg.c" />
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_vmmain.c" />
+    <ClCompile Include="..\..\..\src\nd_crypt\tea.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_asm.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_formula.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_vm.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_vmdbg.c" />
+    <ClCompile Include="..\..\..\src\nd_vm\nd_vmmain.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\nd_common\Makefile" />
+    <None Include="..\..\..\src\nd_crypt\Makefile" />
+    <None Include="..\..\..\src\nd_vm\Makefile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\src\nd_vm\ndasm.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

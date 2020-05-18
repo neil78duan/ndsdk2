@@ -10,7 +10,7 @@
 int __g_pirv_publis_num=2 ; 
 
 /* md5 of private key  */
-char *__g_pubkey_md5="818db498a2be1b87372982031e55f70c" ; 
+const char *__g_pubkey_md5="818db498a2be1b87372982031e55f70c" ; 
 
 
 /* RSA private key  data */ 

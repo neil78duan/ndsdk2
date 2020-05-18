@@ -12,28 +12,38 @@
     <Filter Include="Source Files\ndcommon">
       <UniqueIdentifier>{60cf4957-a9e6-41e8-b8eb-d1fdf65de50a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ndvm">
-      <UniqueIdentifier>{066233fa-1acb-4119-864c-ac18262dd667}</UniqueIdentifier>
+    <Filter Include="Source Files\nd_vm">
+      <UniqueIdentifier>{1d67e881-fedb-416d-b082-acd7bf010025}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_asm.c">
-      <Filter>Source Files\ndvm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_formula.c">
-      <Filter>Source Files\ndvm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_vm.c">
-      <Filter>Source Files\ndvm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_vmdbg.c">
-      <Filter>Source Files\ndvm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_vm\src\nd_vmmain.c">
-      <Filter>Source Files\ndvm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\nd_common\src\nd_str.c">
+    <ClCompile Include="..\..\..\src\nd_common\nd_str.c">
       <Filter>Source Files\ndcommon</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_vm\nd_asm.c">
+      <Filter>Source Files\nd_vm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_vm\nd_formula.c">
+      <Filter>Source Files\nd_vm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_vm\nd_vm.c">
+      <Filter>Source Files\nd_vm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_vm\nd_vmdbg.c">
+      <Filter>Source Files\nd_vm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\nd_vm\nd_vmmain.c">
+      <Filter>Source Files\nd_vm</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\nd_vm\Makefile">
+      <Filter>Source Files\nd_vm</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\src\nd_vm\ndasm.txt">
+      <Filter>Source Files\nd_vm</Filter>
+    </Text>
   </ItemGroup>
 </Project>
