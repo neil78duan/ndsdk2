@@ -71,6 +71,30 @@ extern char  *cJSON_PrintUnformatted(cJSON *item);
 /* Delete a cJSON entity and all subentities. */
 extern void   cJSON_Delete(cJSON *c);
 
+static inline int cJson_GetObjectInt(cJSON *object)
+{
+	if (object->type == cJSON_Number) {
+		return object->valueint;
+	}
+	return 0;
+}
+static inline double cJson_GetObjectNumber(cJSON *object)
+{
+	if (object->type == cJSON_Number) {
+		return object->valuedouble;
+	}
+	return 0;
+}
+
+static inline const char* cJson_GetObjectString(cJSON *object)
+{
+	if (object->type == cJSON_String) {
+		return object->valuestring;
+	}
+	return NULL;
+}
+
+
 /* Returns the number of items in an array (or object). */
 extern int	  cJSON_GetArraySize(cJSON *array);
 /* Retrieve item number "item" from array "array". Returns NULL if unsuccessful. */
