@@ -1,7 +1,7 @@
 /*
  * file applib.h
  *
- * ·þÎñÆ÷³ÌÐòÔËÓÃ¿ò¼Ü£¬¶ÔÍøÂç·þÎñÆ÷SDKµÄ¼òµ¥·â×°
+ * æœåŠ¡å™¨ç¨‹åºè¿ç”¨æ¡†æž¶ï¼Œå¯¹ç½‘ç»œæœåŠ¡å™¨SDKçš„ç®€å•å°è£…
  *
  * create by duan 
  *

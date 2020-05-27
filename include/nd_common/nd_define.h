@@ -99,7 +99,7 @@ typedef unsigned short ndport_t ;
 #define ND_HIDWORD(qwordval) (((qwordval)>>32)  & 0xffffffff)
 
 //nd_error define 
-enum END_ERROR_TYPE
+enum NDRESULT_T
 {
 #undef ErrorElement 
 #define ErrorElement(_errId, _err_description) ND##_errId 
@@ -110,5 +110,6 @@ enum END_ERROR_TYPE
 };
 
 #define NDERR_USERDEFINE 1024 
+//typedef END_ERROR_TYPE ;
 
 #endif
