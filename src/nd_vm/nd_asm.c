@@ -27,7 +27,8 @@ char *__op[] = {
 	"SQRT",
 	"ROUND",
 	"CEIL",
-	"FLOOR"
+	"FLOOR",
+	"POW"
 };
 
 #define IS_COMMENT(a) (a)=='#' 

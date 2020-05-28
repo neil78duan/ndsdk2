@@ -634,7 +634,7 @@ int asm_printf(const char *stm, ...)
 
 char *__inter_func[] = 
 {
-	"MAX", "MIN", "RAND", "LTZERO", "PROB", "SET", "SQRT", "ROUND","CEIL","FLOOR"
+	"MAX", "MIN", "RAND", "LTZERO", "PROB", "SET", "SQRT", "ROUND","CEIL","FLOOR","POW"
 } ;
 
 //检测是否是内部函数

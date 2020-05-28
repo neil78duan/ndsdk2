@@ -129,7 +129,7 @@ int get_operand_num(vm_ins instruction)
 	}
 	else if(EOP_POP==instruction || EOP_PUSH==instruction || 
 		EOP_LTZERO==instruction|| EOP_PROB==instruction || EOP_SQRT==instruction|| EOP_ROUND==instruction ||
-		EOP_CEIL == instruction||EOP_FLOOR == instruction) {
+		EOP_CEIL == instruction||EOP_FLOOR == instruction ) {
 		return 1 ;
 	}
 	else {
@@ -412,6 +412,16 @@ int vm_run_insnode(struct vm_instruction_node *node,struct vm_cpu *vm)
 			break ;
 
 		}
+
+	case  EOP_POW:
+	{	//乘方
+		vm_value val_tmp = vm_getvalue(node->ds1, node->val1, vm);
+		val2 = vm_getvalue(node->ds2, node->val2, vm);
+		//*val1 = min(*val1, val2) ;
+		vm->reg1 = (vm_value)pow(val_tmp, val2);
+		break;
+
+	}
 	case EOP_LTZERO:
 		{	
 			//测试操作数是否小于0 ,小于0返回1 大于0 返回0 
@@ -621,6 +631,7 @@ int vm_echo_res(struct vm_instruction_node *node,struct vm_cpu *vm)
 	case EOP_MAX:		
 	case EOP_MIN:		
 	case EOP_RAND :	
+	case EOP_POW:
 	case EOP_LTZERO:
 	case EOP_PROB:
 	case EOP_SQRT:

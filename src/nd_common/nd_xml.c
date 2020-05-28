@@ -1411,6 +1411,11 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		
 	}
 	
+	if (!paddr) {
+		dealloc_xml(xmlnode);
+		*parse_end = NULL;
+		return NULL;
+	}
 	//read value and sub-xmlnode
 	paddr = ndstr_first_valid(paddr) ;
 	if (_is_mark_start(paddr)) {

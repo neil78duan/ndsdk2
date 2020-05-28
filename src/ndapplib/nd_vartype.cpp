@@ -249,6 +249,8 @@ bool NDVarType::checkValid()const
 			return true;
 		}
 		break;
+	case ND_VT_FLOAT:
+		return 0 != m_data.f_val;
 	default:
 		return 0 != m_data.i64_val;
 	}

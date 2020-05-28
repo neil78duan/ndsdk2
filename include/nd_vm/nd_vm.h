@@ -59,6 +59,7 @@ enum e_vm_op
 	EOP_ROUND,
 	EOP_CEIL,
 	EOP_FLOOR,
+	EOP_POW,
 	EOP_NUMBERS 
 };
 

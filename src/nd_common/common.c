@@ -167,7 +167,8 @@ const char *nd_error_desc(int in_err)
 			"NDERR_SUCCESS ",
 
 #undef ErrorElement 
-#define ErrorElement(a,_err_desc) "system(ND"#a "):" _err_desc
+//#define ErrorElement(a,_err_desc) "system(ND"#a "):" _err_desc
+#define ErrorElement(a,_err_desc)  _err_desc
 #include "nd_common/_nderr.h"		
 #undef ErrorElement 
 		};
