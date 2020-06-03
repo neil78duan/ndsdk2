@@ -54,7 +54,7 @@ NDVarType::~NDVarType()
 NDVarType::NDVarType(const NDVarType &r)
 {
 	m_type = ND_VT_INT;
-	m_data.i_val = 0;
+	m_data.i64_val = 0;
 
 	*this = r;
 }
@@ -69,17 +69,17 @@ NDVarType::NDVarType(NDVarType::NDVTYPE_ELEMENT_TYPE type)
 NDVarType::NDVarType(int a)
 {
 	m_type = ND_VT_INT;
-	m_data.i_val = a;
+	m_data.i64_val = a;
 }
 NDVarType::NDVarType(NDUINT8 a)
 {
 	m_type = ND_VT_INT8;
-	m_data.i_val = a;
+	m_data.i64_val = a;
 }
 NDVarType::NDVarType(NDUINT16 a)
 {
 	m_type = ND_VT_INT16;
-	m_data.i_val = a;
+	m_data.i64_val = a;
 }
 NDVarType::NDVarType(NDUINT64 a)
 {
@@ -95,7 +95,7 @@ NDVarType::NDVarType(float a)
 NDVarType::NDVarType(bool a)
 {
 	m_type = ND_VT_INT;
-	m_data.i_val = a?1:0;
+	m_data.i64_val = a?1:0;
 }
 
 NDVarType::NDVarType(const char* text)
@@ -158,21 +158,21 @@ NDVarType &NDVarType::operator =(int a)
 {
 	destroy();
 	m_type = ND_VT_INT;
-	m_data.i_val = a;
+	m_data.i64_val = a;
 	return *this;
 }
 NDVarType &NDVarType::operator =(NDUINT8 a)
 {
 	destroy();
 	m_type = ND_VT_INT8;
-	m_data.i_val = a;
+	m_data.i64_val = a;
 	return *this;
 }
 NDVarType &NDVarType::operator =(NDUINT16 a)
 {
 	destroy();
 	m_type = ND_VT_INT16;
-	m_data.i_val = a;
+	m_data.i64_val = a;
 	return *this;
 }
 NDVarType &NDVarType::operator =(NDUINT64 a)
@@ -186,7 +186,7 @@ NDVarType &NDVarType::operator =(bool a)
 {
 	destroy();
 	m_type = ND_VT_INT;
-	m_data.i_val = a?1:0;
+	m_data.i64_val = a?1:0;
 	return *this;
 }
 NDVarType &NDVarType::operator =(float a)
@@ -208,7 +208,7 @@ NDVarType &NDVarType::operator =(const NDVarType&r)
 	switch (r.m_type)
 	{
 	case NDVarType::ND_VT_INT:
-		*this = r.m_data.i_val;
+		*this = r.getInt();
 		break;
 	case NDVarType::ND_VT_FLOAT:
 		*this = r.m_data.f_val;
@@ -226,12 +226,42 @@ NDVarType &NDVarType::operator =(const NDVarType&r)
 		*this = r.getInt64();
 		break;
 	case NDVarType::ND_VT_BINARY:
-		initSet(m_data.bin_val, m_data.bin_val->size);
+		initSet(r.m_data.bin_val, r.m_data.bin_val->size);
 		break;
 	default:
 		break;
 	}
 	return *this;
+}
+
+
+void NDVarType::fetchValue(const NDVarType &r)
+{
+	destroy();
+	switch (m_type)
+	{
+	case NDVarType::ND_VT_INT16:
+	case NDVarType::ND_VT_INT8:
+	case NDVarType::ND_VT_INT:
+		m_data.i64_val = r.getInt();
+		break;
+
+	case NDVarType::ND_VT_INT64:
+		m_data.i64_val = r.getInt64();
+		break;
+
+	case NDVarType::ND_VT_FLOAT:
+		m_data.f_val = r.getFloat();
+		break;
+	case NDVarType::ND_VT_STRING:
+		initSet(r.getText());
+		break;
+	case NDVarType::ND_VT_BINARY:
+		initSet(r.getBin(),r.getBinSize());
+		break;
+	default:
+		break;
+	}
 }
 
 
@@ -287,7 +317,7 @@ int NDVarType::getInt()const
 		}
 	}
 	else {
-		return m_data.i_val;
+		return (int)m_data.i64_val;
 	}
 }
 
@@ -368,7 +398,7 @@ std::string NDVarType::getString()const
 	switch (m_type)
 	{
 	case NDVarType::ND_VT_INT:
-		snprintf(tmpbuf, sizeof(tmpbuf), "%d", m_data.i_val);
+		snprintf(tmpbuf, sizeof(tmpbuf), "%d", (int)m_data.i64_val);
 		retval = tmpbuf;
 		break;
 	case NDVarType::ND_VT_FLOAT:
@@ -381,11 +411,11 @@ std::string NDVarType::getString()const
 		}
 		break;
 	case NDVarType::ND_VT_INT8:
-		snprintf(tmpbuf, sizeof(tmpbuf), "%d", (NDUINT8)m_data.i_val);
+		snprintf(tmpbuf, sizeof(tmpbuf), "%d", (NDUINT8)m_data.i64_val);
 		retval = tmpbuf;
 		break;
 	case NDVarType::ND_VT_INT16:
-		snprintf(tmpbuf, sizeof(tmpbuf), "%d", (NDUINT16)m_data.i_val);
+		snprintf(tmpbuf, sizeof(tmpbuf), "%d", (NDUINT16)m_data.i64_val);
 		retval = tmpbuf;
 		break;
 	case NDVarType::ND_VT_INT64:

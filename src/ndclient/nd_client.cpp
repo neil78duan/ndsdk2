@@ -626,7 +626,7 @@ RE_RECV:
 			return -1;
 		}
 		if ((nd_time() - start_tm) >= timeout) {
-			nd_object_seterror(nethandle, NDERR_TIMEOUT);
+			nd_object_seterror(nethandle, NDERR_WOULD_BLOCK);
 			nd_logerror("wait message(%d,%d) timeout\n", waitMaxid, waitMinid);
 			return -1;
 		}
@@ -638,7 +638,7 @@ RE_RECV:
 	}
 	else if (ND_USERMSG_MAXID(recvBuf) != waitMaxid || ND_USERMSG_MINID(recvBuf) != waitMinid) {
 		if ((nd_time() - start_tm) >= timeout) {
-			nd_object_seterror(nethandle, NDERR_TIMEOUT);
+			nd_object_seterror(nethandle, NDERR_WOULD_BLOCK);
 			nd_logerror("wait message(%d,%d) timeout\n", waitMaxid, waitMinid);
 			return -1;
 		}

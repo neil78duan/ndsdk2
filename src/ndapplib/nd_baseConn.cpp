@@ -63,7 +63,7 @@ int NDBaseConnector::sendPack(nd_packhdr_t *msghdr, int flag)
 			nd_tcpnode_flush_sendbuf((nd_netui_handle)m_objhandle) ;
 		}
 	}
-	else if(ret == -1 && nd_object_lasterror(m_objhandle) != NDERR_WOULD_BLOCK) {
+	else if(ret == -1 && nd_object_check_error((nd_handle)m_objhandle)) {
 		Close(0);
 	}
 	return ret ;

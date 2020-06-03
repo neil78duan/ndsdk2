@@ -67,6 +67,8 @@ public:
 	int ToFile(const char *file)const;
 	int FromFile(const char *file);
 
+	void SetProtocolError(int errCode);
+
 protected:
 	bool create();
 	virtual void onWriteStream(size_t size);
@@ -158,6 +160,7 @@ public:
     int ReadIp(ndip_t &a) ;
 	size_t GetDataLen();
 	size_t GetSerialBin(void *buf, size_t bufsize);	
+	int GetProtocolError();
 protected:
 	NDRecvMsg();
 	nd_usermsgbuf_t  *recv_packet ;

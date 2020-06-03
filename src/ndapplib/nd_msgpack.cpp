@@ -117,6 +117,11 @@ int NDSendMsg::FromFile(const char *file)
 	return _read_file(file, _packet);
 }
 
+void NDSendMsg::SetProtocolError(int errCode)
+{
+	nd_usermsg_set_error(&_packet->msg_hdr, errCode);
+}
+
 size_t NDSendMsg::GetSerialBin(void *buf, size_t bufsize)
 {
 	size_t len =(size_t ) MsgLength() ;
@@ -654,6 +659,12 @@ NDRecvMsg::NDRecvMsg(nd_usermsgbuf_t *pmsg)
 NDRecvMsg::~NDRecvMsg()
 {
 
+}
+
+
+int NDRecvMsg::GetProtocolError()
+{
+	return (int)ND_USERMSG_ERROR(recv_packet);
 }
 
 size_t NDRecvMsg::GetSerialBin(void *buf, size_t bufsize)

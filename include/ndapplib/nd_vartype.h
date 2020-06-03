@@ -23,7 +23,7 @@ struct ndvtype_bin
 };
 
 union ndvtype_data{
-	int i_val;
+	//int i_val;
 	float f_val;
 	NDUINT64 i64_val;
 	char *str_val;
@@ -109,6 +109,7 @@ public:
 	bool getBool()const;
 	float getFloat()const;
 	const char *getText()const;
+	void fetchValue(const NDVarType &r); //set value and not change current value-type
     
     static NDVarType::NDVTYPE_ELEMENT_TYPE getTypeByName(const char *teypName) ;
     static const char* getNameBytype(int type) ;

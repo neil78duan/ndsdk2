@@ -242,34 +242,53 @@ int nd_object_get_type(nd_handle h)
 
 int nd_object_check_error(nd_handle h) 
 {
-	if (h->myerrno ==NDERR_SUCCESS ||
-		h->myerrno == NDERR_WOULD_BLOCK ||
-		h->myerrno==NDERR_NO_PRIVILAGE ||
-		h->myerrno >= NDERR_USER_BREAK)	{
-		return 0 ;
+	if (h->myerrno == NDERR_INVALID_HANDLE ||
+		h->myerrno == NDERR_TIMEOUT ||
+		h->myerrno == NDERR_OPENFILE ||
+		h->myerrno == NDERR_USER ||
+		h->myerrno == NDERR_IO ||
+		h->myerrno == NDERR_RESET ||
+		h->myerrno == NDERR_WRITE ||
+		h->myerrno == NDERR_CLOSED ||
+		h->myerrno == NDERR_READ) {
+		return h->myerrno;
 	}
-	return h->myerrno ;
+	return 0;
+// 	if (h->myerrno ==NDERR_SUCCESS ||
+// 		h->myerrno == NDERR_WOULD_BLOCK ||
+// 		h->myerrno==NDERR_NO_PRIVILAGE ||
+// 		h->myerrno == NDERR_INVALID_INPUT||
+// 		h->myerrno >= NDERR_USER_BREAK
+// 		)	{
+// 		return 0 ;
+// 	}
+// 	return h->myerrno ;
 }
 
 int nd_tryto_clear_err(nd_handle h)
 {
+	if (!nd_object_check_error(h)) {
+		h->myerrno = 0;
+		return 0;
+	}
+	return h->myerrno;
 //	int ret = h->myerrno ;
 
-	if (h->myerrno ==NDERR_INVALID_HANDLE || 
-		h->myerrno==NDERR_TIMEOUT || 
-		h->myerrno==NDERR_OPENFILE||
-		h->myerrno==NDERR_USER||
-		h->myerrno==NDERR_IO||
-		h->myerrno==NDERR_RESET||
-		h->myerrno==NDERR_WRITE||
-		h->myerrno==NDERR_CLOSED||
-		h->myerrno==NDERR_READ)	{
-			return h->myerrno ;
-	}
-	else {
-		h->myerrno = 0 ;
-		return 0 ;
-	}
+// 	if (h->myerrno ==NDERR_INVALID_HANDLE || 
+// 		h->myerrno==NDERR_TIMEOUT || 
+// 		h->myerrno==NDERR_OPENFILE||
+// 		h->myerrno==NDERR_USER||
+// 		h->myerrno==NDERR_IO||
+// 		h->myerrno==NDERR_RESET||
+// 		h->myerrno==NDERR_WRITE||
+// 		h->myerrno==NDERR_CLOSED||
+// 		h->myerrno==NDERR_READ)	{
+// 			return h->myerrno ;
+// 	}
+// 	else {
+// 		h->myerrno = 0 ;
+// 		return 0 ;
+// 	}
 	
 }
 

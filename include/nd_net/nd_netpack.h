@@ -35,9 +35,11 @@ typedef struct packet_hdr
 	NDUINT8		ndsys_msg:1;			/* system message*/
 	NDUINT8		encrypt:1;				/* the package is crypt */
 	NDUINT8		stuff:1;				/* is filled data on tail when crypt*/
-	NDUINT8		stuff_len:5;			/* fill length*/
+	NDUINT8		unused : 1;				/* with error code */
+	NDUINT8		stuff_len:4;			/* fill length*/
 #else 
-	NDUINT8		stuff_len:5;			
+	NDUINT8		stuff_len:4;			
+	NDUINT8		unused : 1;				/* with error code */
 	NDUINT8		stuff:1;				
 	NDUINT8		encrypt:1;				
 	NDUINT8		ndsys_msg:1;			
@@ -135,7 +137,7 @@ typedef struct nd_usermsghdr_t
 	nd_packhdr_t	packet_hdr;		//消息包头
 	ndmsgid_t		maxid;		//主消息号 8bits
 	ndmsgid_t		minid;		//次消息号 8bits
-//	ndmsgparam_t	param;		//消息参数
+	NDUINT16		error_code;		//消息参数
 }nd_usermsghdr_t;
 
 #define ND_USERMSG_HDRLEN sizeof(nd_usermsghdr_t)
@@ -157,6 +159,13 @@ static __INLINE__ void nd_usermsghdr_init(nd_usermsghdr_t *hdr)
 	hdr->packet_hdr.version = NDNETMSG_VERSION;
 }
 
+static __INLINE__ void nd_usermsg_set_error(nd_usermsghdr_t *hdr, int error)
+{
+	hdr->error_code = (NDUINT16)error;
+	hdr->packet_hdr.unused = 1;
+}
+
+
 #define ND_USERMSG_INITILIZER {{ND_USERMSG_HDRLEN,NDNETMSG_VERSION,0,0,0},0,0,0} 
 #define nd_netmsg_hton(m)		//net message byte order to host  
 #define nd_netmsg_ntoh(m)		//host to net
@@ -164,6 +173,7 @@ static __INLINE__ void nd_usermsghdr_init(nd_usermsghdr_t *hdr)
 #define ND_USERMSG_LEN(m)	((nd_packhdr_t*)m)->length
 #define ND_USERMSG_MAXID(m)	((nd_usermsghdr_t*)m)->maxid 
 #define ND_USERMSG_MINID(m)	((nd_usermsghdr_t*)m)->minid 
+#define ND_USERMSG_ERROR(m)	((nd_usermsghdr_t*)m)->error_code 
 #define ND_USERMSG_PARAM(m)	
 #define ND_USERMSG_DATA(m)	(((nd_usermsgbuf_t*)m)->data)
 #define ND_USERMSG_DATALEN(m)	(((nd_packhdr_t*)m)->length - ND_USERMSG_HDRLEN)
