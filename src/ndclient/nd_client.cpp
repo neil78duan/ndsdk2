@@ -616,7 +616,6 @@ int ndSendAndWaitMessage(nd_handle nethandle, nd_usermsgbuf_t *sendBuf, nd_userm
 RE_RECV:
 	ret = nd_connector_waitmsg(nethandle, (nd_packetbuf_t *)recvBuf, timeout);
 	if (ret <= 0 ) {
-		//nd_object_seterror(nethandle, NDERR_TIMEOUT);
 		nd_logerror("wait message timeout\n");
 		return -1;
 	}
