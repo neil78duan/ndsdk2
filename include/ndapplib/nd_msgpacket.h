@@ -63,11 +63,13 @@ public:
 	size_t GetDataLen();
 
     int WriteIp(ndip_t& ) ;
+
+	int WriteErrorCode(NDUINT32 errId);
+	void SetProtocolError(int errCode);
     
 	int ToFile(const char *file)const;
 	int FromFile(const char *file);
 
-	void SetProtocolError(int errCode);
 
 protected:
 	bool create();
@@ -82,6 +84,7 @@ public:
 	NDOStreamMsg() :NDSendMsg() {}
 	NDOStreamMsg(int maxid, int minid) :NDSendMsg(maxid, minid) {}
 	NDOStreamMsg(NDUINT16 msgID):NDSendMsg(msgID) {}
+	
 };
 // 
 // class NDIStreamMsg;

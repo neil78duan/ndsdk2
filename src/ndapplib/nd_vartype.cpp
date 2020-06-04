@@ -122,6 +122,11 @@ void NDVarType::destroy()
 	m_data.str_val = 0;
 }
 
+void NDVarType::setZero()
+{
+	InitType(m_type);
+}
+
 bool NDVarType::initSet(const char*text)
 {
 	destroy();

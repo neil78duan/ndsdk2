@@ -64,6 +64,7 @@ public:
     
     void InitType(NDVarType::NDVTYPE_ELEMENT_TYPE type);
     void destroy();
+	void setZero();
 	NDVTYPE_ELEMENT_TYPE getDataType()const { return m_type; }
 
 	NDVarType &operator =(int a);

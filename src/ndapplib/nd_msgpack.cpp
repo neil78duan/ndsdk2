@@ -122,6 +122,13 @@ void NDSendMsg::SetProtocolError(int errCode)
 	nd_usermsg_set_error(&_packet->msg_hdr, errCode);
 }
 
+int NDSendMsg::WriteErrorCode(NDUINT32 errId)
+{
+	SetProtocolError((int)errId);
+	return Write(errId);
+}
+
+
 size_t NDSendMsg::GetSerialBin(void *buf, size_t bufsize)
 {
 	size_t len =(size_t ) MsgLength() ;
@@ -151,6 +158,7 @@ int NDSendMsg::WriteIp(ndip_t& a)
     }
     return ret;
 }
+
 size_t NDSendMsg::GetDataLen()	{ return ND_USERMSG_DATALEN(_packet); }
 
 
