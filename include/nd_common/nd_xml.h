@@ -139,6 +139,7 @@ ND_COMMON_API ndxml *ndxml_refsubi(ndxml *root, int index) ;
 ND_COMMON_API const char *ndxml_getval(ndxml *node);
 ND_COMMON_API char *ndxml_getval_buf(ndxml *node, char *buf, size_t size);
 ND_COMMON_API int ndxml_getval_int(ndxml *node);
+ND_COMMON_API NDINT64 ndxml_getval_int64(ndxml *node);
 ND_COMMON_API float ndxml_getval_float(ndxml *node);
 //get attribute value
 ND_COMMON_API struct ndxml_attr *ndxml_getattrib(ndxml *node , const char *name);

@@ -998,6 +998,15 @@ int ndxml_getval_int(ndxml *node)
 		return 0 ;
 }
 
+NDINT64 ndxml_getval_int64(ndxml *node)
+{
+	if (node->value && node->value[0])
+		return ndstr_atoll_hex(node->value);
+	else
+		return 0;
+}
+
+
 float ndxml_getval_float(ndxml *node)
 {
 	if(node->value && node->value[0])
