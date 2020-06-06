@@ -58,6 +58,22 @@ static const char* _read_replace_text(const char *src, char *outText)
 	else if (0 == ndstricmp(buf, "apos")) {
 		*outText = _ND_SINGLE_QUOT;
 	}
+	else if (0 == ndstricmp(buf, "nbsp")) {
+		*outText = ' ';
+	}
+	else if (0 == ndstricmp(buf, "times")) {
+		*outText = '*';
+	}
+	else if (0 == ndstricmp(buf, "divde")) {
+		*outText = '/';
+	}
+// 	else if (0 == ndstricmp(buf, "bsc")) {
+// 		*outText = '\\';
+// 	}
+	else {
+		nd_assert(0);
+		//return src;
+	}
 	return p;
 }
 
@@ -70,6 +86,7 @@ static  char* _out_replace_text(const char *src, char *outText,size_t len)
 	*outText = 0;
 
 	while (*p && buf_size > 0){
+		
 		if (*p == _ND_SINGLE_QUOT){
 			ndstrncat(outText, "&apos;", buf_size);
 			outText += 6;
@@ -83,13 +100,37 @@ static  char* _out_replace_text(const char *src, char *outText,size_t len)
 			++p;
 		}
 
+		else if (*p == ' ') {
+			ndstrncat(outText, "&nbsp;", buf_size);
+			outText += 6;
+			buf_size -= 6;
+			++p;
+		}
 		else if (*p == '&') {
 			ndstrncat(outText, "&amp;", buf_size);
 			outText += 5;
 			buf_size -= 5;
 			++p;
 		}
+		else if (*p == '*') {
+			ndstrncat(outText, "&times;", buf_size);
+			outText += 7;
+			buf_size -= 7;
+			++p;
+		}
+		else if (*p == '/') {
+			ndstrncat(outText, "&divde;", buf_size);
+			outText += 7;
+			buf_size -= 7;
+			++p;
+		}
 
+// 		else if (*p == '\\') {
+// 			ndstrncat(outText, "&bsc;", buf_size);
+// 			outText += 5;
+// 			buf_size -= 5;
+// 			++p;
+// 		}
 		else if (*p == '<') {
 			ndstrncat(outText, "&lt;", buf_size);
 			outText += 4;
@@ -105,6 +146,7 @@ static  char* _out_replace_text(const char *src, char *outText,size_t len)
 			++p;
 		}
 		else {
+
 			int ret = ndstr_read_utf8char((char **)&p, (char**)&outText);
 			buf_size -= ret;
 			*outText = 0;
@@ -1402,7 +1444,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 			return NULL;
 		}
 		else {
-			char buf[4096];
+			char buf[4096] = { 0 };
 			*error_addr = paddr;
 			paddr = _xml_read_attrval(paddr, buf, sizeof(buf));
 			if (!paddr) {
