@@ -605,29 +605,50 @@ NDVarType &NDVarType::operator+=(const char *text)
 	return *this;
 }
 
+
+#define ND_VARDATA_LOGIC_OP(r,_OP) \
+	switch (m_type)	{				\
+	case ND_VT_INT8:						\
+	case ND_VT_INT16:						\
+	case ND_VT_INT:						\
+	{									\
+		return ( getInt() _OP r.getInt());	\
+	}				\
+	case ND_VT_INT64:	\
+	{				\
+		return (getInt64() _OP r.getInt64());	\
+	}				\
+	case ND_VT_FLOAT:	\
+	{				\
+		return (getFloat() _OP r.getFloat());	\
+	}				\
+	default:							\
+		return (getFloat() _OP r.getFloat());	\
+	}
+
 bool  NDVarType::operator <(const NDVarType &r) const
 {
-	return m_data.i64_val < r.m_data.i64_val;
+	ND_VARDATA_LOGIC_OP(r, < );
 }
 
 bool  NDVarType::operator >(const NDVarType &r) const
 {
-	return m_data.i64_val > r.m_data.i64_val;
+	ND_VARDATA_LOGIC_OP( r, > );
 }
 bool  NDVarType::operator ==(const NDVarType &r) const
 {
-	return m_data.i64_val == r.m_data.i64_val;
+	ND_VARDATA_LOGIC_OP(r, == );
 }
 
 bool  NDVarType::operator >=(const NDVarType &r) const
 {
-	return m_data.i64_val >= r.m_data.i64_val;
+	ND_VARDATA_LOGIC_OP(r, >= );
 }
 bool  NDVarType::operator <=(const NDVarType &r) const
 {
-	return m_data.i64_val <= r.m_data.i64_val;
+	ND_VARDATA_LOGIC_OP(r, <= );
 }
 bool  NDVarType::operator !=(const NDVarType &r) const
 {
-	return m_data.i64_val != r.m_data.i64_val;
+	ND_VARDATA_LOGIC_OP(r, != );
 }

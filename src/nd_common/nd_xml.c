@@ -1718,7 +1718,7 @@ static __INLINE__ void indent(FILE *fp, int deep)
 //@deep 节点的深度
 int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 {
-	char textBuf[4096];
+	char textBuf[8192];
 	struct list_head *pos ;
 
 	indent(fp,deep) ;
