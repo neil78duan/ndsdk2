@@ -1716,10 +1716,15 @@ static __INLINE__ void indent(FILE *fp, int deep)
 }
 //把xml写到文件中
 //@deep 节点的深度
+#define XML_VALUE_SIZE 8192
 int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 {
-	char textBuf[8192];
+	//char textBuf[8192];
+	char *textBuf = (char*)malloc(XML_VALUE_SIZE);
 	struct list_head *pos ;
+	if (!textBuf) {
+		return -1;
+	}
 
 	indent(fp,deep) ;
 	ndfprintf(fp, "<%s", xmlnode->name) ;
@@ -1733,7 +1738,7 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
         if( attr_val1[0] ) {
 			textBuf[0] = 0;
 			
-			ndfprintf(fp, " %s=\"%s\"", (char*)(xml_attr + 1), _out_replace_text(attr_val1, textBuf, sizeof(textBuf)));
+			ndfprintf(fp, " %s=\"%s\"", (char*)(xml_attr + 1), _out_replace_text(attr_val1, textBuf, XML_VALUE_SIZE));
         }
         else {
             ndfprintf(fp, " %s=\"\"", (char*)(xml_attr + 1)) ;
@@ -1743,7 +1748,7 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 	//save value of sub-xmlnode
 	if(xmlnode->value && xmlnode->value[0]) {
 		textBuf[0] = 0;
-		ndfprintf(fp, ">%s</%s>\n", _out_replace_text(xmlnode->value, textBuf, sizeof(textBuf)), xmlnode->name);
+		ndfprintf(fp, ">%s</%s>\n", _out_replace_text(xmlnode->value, textBuf, XML_VALUE_SIZE), xmlnode->name);
 	}
 	else if (xmlnode->sub_num>0){
 		ndfprintf(fp, ">\n") ;
@@ -1760,6 +1765,7 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 	else {
 		ndfprintf(fp, "/>\n") ;
 	}
+	free(textBuf);
 	return 0 ;
 }
 
