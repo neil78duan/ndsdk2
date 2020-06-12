@@ -78,6 +78,95 @@ MSG_ENTRY_INSTANCE(nd_transfer_to_client)
 	return 0;
 }
 
+MSG_ENTRY_INSTANCE(nd_unwrap_send_to_client)
+{
+	ND_TRACE_FUNC();
+	NDUINT16 sid;
+	NDUINT8 encrypt = 0;
+	NDIStreamMsg inmsg(msg);
+	nd_usermsgbuf_t realMsg;
+
+	if (-1 == inmsg.Read(sid)) {
+		nd_logmsg("world message transfer error \n");
+		return 0;
+	}
+	if (-1 == inmsg.Read(encrypt)) {
+		nd_logmsg("world message transfer error \n");
+		return 0;
+	}
+
+	//nd_logdebug("%s wrap message by(%d, %d) length=%d to client %d\n", 		nd_object_get_instname(nethandle), inmsg.MsgMaxid(), inmsg.MsgMinid(), inmsg.MsgLength(), sid);
+
+	size_t size = inmsg.ReadBin(&realMsg, sizeof(realMsg));
+	if (size < ND_USERMSG_HDRLEN || size != ND_USERMSG_LEN(&realMsg)) {
+		nd_logerror("recv wrapped message error length to small size =%d\n", (int)size);
+		return 0;
+	}
+
+	nd_logdebug("recved (%d,%d ) length = %d from %s wrapped by (%d, %d) direct-to-client session=%d\n",
+		ND_USERMSG_MAXID(&realMsg), ND_USERMSG_MINID(&realMsg), ND_USERMSG_LEN(&realMsg),
+		netconn->getName(), inmsg.MsgMaxid(), inmsg.MsgMinid(), inmsg.MsgLength(), sid);
+	
+	nd_handle h_listen = netconn->GetListenerHandle();
+	if (!h_listen) {
+		h_listen = getbase_inst()->GetDeftListener()->GetHandle();
+		nd_assert(h_listen);
+	}
+
+	if (0 == sid) {
+		nd_session_send_all(&realMsg.msg_hdr, h_listen, EPL_READY,(int)encrypt);
+	}
+	else {
+		nd_session_send_id(sid, &realMsg.msg_hdr, h_listen, (int)encrypt);
+	}
+	return 0;
+}
+
+
+MSG_ENTRY_INSTANCE(nd_unwrap_call_session_msgproc)
+{
+	ND_TRACE_FUNC();
+	NDUINT16 sid;
+	NDUINT8 encrypt = 0;
+	NDIStreamMsg inmsg(msg);
+	nd_usermsgbuf_t realMsg;
+
+	if (-1 == inmsg.Read(sid)) {
+
+		nd_logmsg("world message transfer error \n");
+		return 0;
+	}
+	if (-1 == inmsg.Read(encrypt)) {
+		nd_logmsg("world message transfer error \n");
+		return 0;
+	}
+
+
+	size_t size = inmsg.ReadBin(&realMsg, sizeof(realMsg));
+	if (size < ND_USERMSG_HDRLEN || size != ND_USERMSG_LEN(&realMsg)) {
+		nd_logerror("recv wrapped message to msg proc error length to small\n");
+		return 0;
+	}
+	nd_logdebug("recved (%d,%d ) length = %d from %s wrapped by (%d, %d) direct-to-client session=%d\n",
+		ND_USERMSG_MAXID(&realMsg), ND_USERMSG_MINID(&realMsg), ND_USERMSG_LEN(&realMsg),
+		netconn->getName(), inmsg.MsgMaxid(), inmsg.MsgMinid(), inmsg.MsgLength(), sid);
+
+	nd_handle h_listen = netconn->GetListenerHandle();
+	if (!h_listen) {
+		h_listen = getbase_inst()->GetDeftListener()->GetHandle();
+		nd_assert(h_listen);
+	}
+
+	if (0 == sid) {
+		nd_netmsg_2all_handle(&realMsg.msg_hdr, h_listen, EPL_READY);
+
+	}
+	else {
+		nd_netmsg_handle(sid, &realMsg.msg_hdr, h_listen);
+	}
+	return 0;
+}
+
 MSG_ENTRY_INSTANCE(nd_get_message_name_handler)
 {
 	ND_TRACE_FUNC();
