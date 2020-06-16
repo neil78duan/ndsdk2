@@ -68,6 +68,8 @@ static __INLINE__ void ndxml_initroot(ndxml_root *root)
 //set error callback 
 ND_COMMON_API xml_errlog nd_setxml_log(xml_errlog logfunc) ;
 
+ND_COMMON_API int ndxml_open_keyword_replace(int enable);
+
 ND_COMMON_API int ndxml_is_empty(ndxml *node);
 //load 
 ND_COMMON_API int ndxml_load(const char *file,ndxml_root *xmlroot) ;

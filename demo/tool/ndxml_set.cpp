@@ -123,6 +123,7 @@ int main(int argc, char *argv[])
         exit(-1) ;
     }
     
+	ndxml_open_keyword_replace(0);
     
     if (0==set_xml_value(filename, node_list, attr_name, attr_val, node_val)) {
         return 0;

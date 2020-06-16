@@ -27,6 +27,16 @@ static int  _is_mark_start(const char *p)
 	return 0;
 }
 
+static int _s_replace_key_word = 1;
+
+int ndxml_open_keyword_replace(int enable)
+{
+	int ret = _s_replace_key_word;
+	_s_replace_key_word = enable;
+	return ret;
+}
+
+
 static const char* _read_replace_text(const char *src, char *outText)
 {
 	const char *p = src;
@@ -83,6 +93,11 @@ static  char* _out_replace_text(const char *src, char *outText,size_t len)
 	const char *p = src;	
 	char *ret = outText;
 	int buf_size = (int)len;
+
+	if (_s_replace_key_word == 0) {
+		return src;
+	}
+
 	*outText = 0;
 
 	while (*p && buf_size > 0){
@@ -125,12 +140,6 @@ static  char* _out_replace_text(const char *src, char *outText,size_t len)
 			++p;
 		}
 
-// 		else if (*p == '\\') {
-// 			ndstrncat(outText, "&bsc;", buf_size);
-// 			outText += 5;
-// 			buf_size -= 5;
-// 			++p;
-// 		}
 		else if (*p == '<') {
 			ndstrncat(outText, "&lt;", buf_size);
 			outText += 4;
