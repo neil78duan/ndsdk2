@@ -162,6 +162,7 @@ static  char* _out_replace_text(const char *src, char *outText,size_t len)
 		}
 	}
 	*outText = 0;
+	nd_assert(buf_size >= 0);
 
 	return ret;
 
@@ -1366,7 +1367,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 	//char buf[1024*16] ;
 	
 	paddr = parse_marked(xmlbuf, size, error_addr)  ;
-	if(!paddr){
+	if(!paddr || !*paddr){
 		*parse_end = NULL ;
 		if (!*error_addr) {
 			*error_addr = xmlbuf ;
@@ -1384,7 +1385,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 	++paddr ;
 
 	paddr = ndstr_first_valid(paddr) ;
-	if(!paddr) {
+	if(!paddr || !*paddr) {
 		*parse_end = NULL ;
 		return NULL ;
 	}
@@ -1405,6 +1406,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 	if (ret <= 0)	{
 		dealloc_xml(xmlnode);
 		*parse_end = NULL;
+		*error_addr = paddr;
 		return NULL;
 	}
 	else {
@@ -1438,6 +1440,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		if (ret <= 0)	{
 			dealloc_xml(xmlnode);
 			*parse_end = NULL;
+			*error_addr = paddr;
 			return NULL;
 		}
 		else {
@@ -1450,6 +1453,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		if (!paddr)	{
 			dealloc_xml(xmlnode);
 			*parse_end = NULL;
+			*error_addr = paddr;
 			return NULL;
 		}
 		else {
@@ -1458,6 +1462,8 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 			paddr = _xml_read_attrval(paddr, buf, sizeof(buf));
 			if (!paddr) {
 				dealloc_xml(xmlnode);
+
+				*error_addr = xmlbuf;
 				return NULL;
 			}
 			//------------------
@@ -1471,13 +1477,22 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		
 	}
 	
-	if (!paddr) {
+	if (!paddr || !*paddr) {
 		dealloc_xml(xmlnode);
 		*parse_end = NULL;
+		*error_addr = xmlbuf;
 		return NULL;
 	}
 	//read value and sub-xmlnode
 	paddr = ndstr_first_valid(paddr) ;
+	
+	if (!paddr || !*paddr) {
+		dealloc_xml(xmlnode);
+		*parse_end = NULL;
+		*error_addr = xmlbuf;
+		return NULL;
+	}
+
 	if (_is_mark_start(paddr)) {
 		//xml node end </
 		goto READ_END ;
@@ -1513,17 +1528,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 	else {
 		//read xml value 
 		size_t val_size ;
-		/*const char *tmp  = ndstr_reverse_chr(paddr, '>', xmlbuf) ;
-		if(!tmp){
-			tmp = paddr ;
-		}
-		else {
-			++tmp ;
-		}*/
-		//----------------
-		/*
-		paddr = ndstr_str_end(tmp,buf, '<') ;		//读取xml值,一直到"<"结束
-		*/
+		
 		//get size 
 		val_size = _xml_get_value_size(paddr );
 
@@ -1723,14 +1728,39 @@ static __INLINE__ void indent(FILE *fp, int deep)
 		ndfprintf(fp,"\t"); 
 	}
 }
+
+static size_t get_xml_value_size(ndxml *xmlnode)
+{
+	size_t ret = xmlnode->val_size;
+
+	struct list_head *pos ;
+	list_for_each(pos, &xmlnode->lst_attr) {
+		struct ndxml_attr *xml_attr = list_entry(pos, struct ndxml_attr, lst);
+
+		if (xml_attr->value_size > ret) {
+			ret = xml_attr->value_size;
+		}
+	}
+	return ret;
+}
+
 //把xml写到文件中
 //@deep 节点的深度
-#define XML_VALUE_SIZE 8192
+#define XML_VALUE_SIZE 256
 int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 {
-	//char textBuf[8192];
-	char *textBuf = (char*)malloc(XML_VALUE_SIZE);
 	struct list_head *pos ;
+	size_t value_buffer_size = get_xml_value_size(xmlnode);
+	char *textBuf;
+
+	if (value_buffer_size < XML_VALUE_SIZE) {
+		value_buffer_size = 1024;
+	}
+	else {
+		value_buffer_size += 4096;
+	}
+
+	textBuf = (char*)malloc(value_buffer_size);
 	if (!textBuf) {
 		return -1;
 	}
@@ -1747,7 +1777,7 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
         if( attr_val1[0] ) {
 			textBuf[0] = 0;
 			
-			ndfprintf(fp, " %s=\"%s\"", (char*)(xml_attr + 1), _out_replace_text(attr_val1, textBuf, XML_VALUE_SIZE));
+			ndfprintf(fp, " %s=\"%s\"", (char*)(xml_attr + 1), _out_replace_text(attr_val1, textBuf, value_buffer_size));
         }
         else {
             ndfprintf(fp, " %s=\"\"", (char*)(xml_attr + 1)) ;
@@ -1757,7 +1787,7 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 	//save value of sub-xmlnode
 	if(xmlnode->value && xmlnode->value[0]) {
 		textBuf[0] = 0;
-		ndfprintf(fp, ">%s</%s>\n", _out_replace_text(xmlnode->value, textBuf, XML_VALUE_SIZE), xmlnode->name);
+		ndfprintf(fp, ">%s</%s>\n", _out_replace_text(xmlnode->value, textBuf, value_buffer_size), xmlnode->name);
 	}
 	else if (xmlnode->sub_num>0){
 		ndfprintf(fp, ">\n") ;
