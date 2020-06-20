@@ -1644,8 +1644,8 @@ struct ndxml_attr *alloc_attrib_node(const char *name, const char *value)
 {
 	char *p ;
 	struct ndxml_attr *pnode ;
-	int len = (int) ndstrlen(name) ;
-    int val_reallen =(int) ndstrlen(value) ;
+	int len = (int) ndstrlen(name) +1;
+    int val_reallen =(int) ndstrlen(value) +1 ;
 	int val_len = val_reallen ;
 	//if(!len || !val_len)  {
 	//	return NULL;

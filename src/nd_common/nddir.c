@@ -244,7 +244,7 @@ int nd_chdir(const char *dir)
 //copy 
 int nd_cpfile(const char *oldfile, const char *newfile)
 {
-	return CopyFile( (LPCTSTR) oldfile, (LPCTSTR) newfile,TRUE) ? 0 : -1;
+	return CopyFile( (LPCTSTR) oldfile, (LPCTSTR) newfile,FALSE) ? 0 : -1;
 
 }
 
