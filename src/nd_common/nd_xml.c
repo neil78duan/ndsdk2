@@ -1413,6 +1413,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		paddr += ret;
 	}
 
+	*error_addr = paddr;
 	//read attribe
 	while(*paddr) {
 		struct ndxml_attr *attrib_node ;
@@ -1440,7 +1441,6 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		if (ret <= 0)	{
 			dealloc_xml(xmlnode);
 			*parse_end = NULL;
-			*error_addr = paddr;
 			return NULL;
 		}
 		else {
@@ -1453,7 +1453,6 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		if (!paddr)	{
 			dealloc_xml(xmlnode);
 			*parse_end = NULL;
-			*error_addr = paddr;
 			return NULL;
 		}
 		else {
@@ -1462,8 +1461,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 			paddr = _xml_read_attrval(paddr, buf, sizeof(buf));
 			if (!paddr) {
 				dealloc_xml(xmlnode);
-
-				*error_addr = xmlbuf;
+				*parse_end = NULL;
 				return NULL;
 			}
 			//------------------
@@ -1480,7 +1478,6 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 	if (!paddr || !*paddr) {
 		dealloc_xml(xmlnode);
 		*parse_end = NULL;
-		*error_addr = xmlbuf;
 		return NULL;
 	}
 	//read value and sub-xmlnode
@@ -1493,6 +1490,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		return NULL;
 	}
 
+	*error_addr = paddr;
 	if (_is_mark_start(paddr)) {
 		//xml node end </
 		goto READ_END ;
@@ -1508,7 +1506,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 				new_xml->parent = xmlnode;
 				xmlnode->sub_num++ ;
 			}
-			else if(*error_addr && NULL==parsed) {
+			else if(*error_addr && (NULL==parsed || !*parsed)) {
 				if (!error_addr) {
 					*error_addr = (char *) paddr;
 				}
@@ -1517,6 +1515,7 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 				*parse_end = NULL ;
 				return NULL ;
 			}
+			nd_assert(parsed);
 			paddr = ndstr_first_valid(parsed) ;
 			//if(XML_T_END==*((short*)paddr)) {
 			if (_is_mark_start(paddr)) {
