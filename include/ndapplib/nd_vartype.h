@@ -16,6 +16,11 @@
 #include <string>
 #endif 
 
+
+#ifdef _MSC_VER
+#pragma warning (disable: 4200)
+#endif
+
 struct ndvtype_bin
 {
 	size_t size;
