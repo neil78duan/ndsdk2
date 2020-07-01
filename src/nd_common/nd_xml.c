@@ -212,7 +212,7 @@ static const char *_xml_read_value(const char *xmlbuf, char *buf, size_t size)
 {
 	const char *p = xmlbuf;
 
-	while (*p){
+	while (*p && size > 0){
 		if (*p == '&' && (IS_LITTLE_LATIN(p[1]) || IS_BIG_LATIN(p[1]))){
 			p = _read_replace_text(p, buf);
 			++buf;
@@ -1027,8 +1027,7 @@ ndxml *ndxml_refsubi(ndxml *root, int index)
 const char *ndxml_getval(ndxml *node)
 {
 	if (node->value && node->value[0]){
-		const char *p = node->value;
-		return *p ? p : NULL;
+		return node->value;
 	}
 	else
 		return NULL ;
@@ -1038,8 +1037,10 @@ char *ndxml_getval_buf(ndxml *node, char *buf, size_t size)
 {
 	if(node->value && node->value[0])
 		return ndstrncpy(buf,node->value, size) ;
-	else
-		return NULL ;
+	else {
+		buf[0] = 0;
+		return NULL;
+	}
 }
 
 int ndxml_getval_int(ndxml *node)
@@ -1118,7 +1119,7 @@ struct ndxml_attr  *ndxml_addattrib(ndxml *parent, const char *name, const char 
 
 int ndxml_setattrval(ndxml *parent, const char *name, const char *value)
 {
-	int len ;
+	int len = 0 ;
 	struct ndxml_attr  * attr ;
 
 	if( !name) {
@@ -1151,14 +1152,14 @@ int ndxml_setattrval(ndxml *parent, const char *name, const char *value)
 		dealloc_attrib_node(attr);
 	}
 	else {
-		ndstrcpy((char*)(attr + 1)+attr->name_size, value) ;
+		ndstrncpy((char*)(attr + 1)+attr->name_size, value,attr->value_size) ;
 	}
 	return 0;
 }
 int ndxml_setattrvali(ndxml *parent, int index, const char *value)
 {
 	
-	int len ;
+	int len =0;
 	struct ndxml_attr  * attr ;
 
 	if( index <0 || index>= parent->attr_num) {
@@ -1188,7 +1189,7 @@ int ndxml_setattrvali(ndxml *parent, int index, const char *value)
 		return 0 ;
 	}
 	else {
-		ndstrcpy((char*)(attr + 1)+attr->name_size, value) ;
+		ndstrncpy((char*)(attr + 1)+attr->name_size, value,attr->value_size) ;
 	}
 	return 0;
 }
@@ -1223,33 +1224,27 @@ int ndxml_setval_float(ndxml *node, float val)
 int ndxml_setval(ndxml *node , const char *val)
 {
 	int len;
-	if(!val)
-		return -1 ;
-
-	len = (int) ndstrlen(val) ;
-	if(len==0)
-		return -1 ;
-
-	++len;
-	if(node->value){
-		if(len>node->val_size) {
-			char *tmp ;
-			
-			len += 4 ; len &= ~3;
-			tmp = malloc(len);
-			if(!tmp)
-				return -1 ;
-			free(node->value) ;
-			node->value = tmp ;
+	if (!val || !*val) {
+		if (node->value){
+			node->value[0] = 0;
 		}
+		return 0;
 	}
-	else {
-		len += 4 ; len &= ~3;
-		node->value = malloc(len);
-		if(!node->value)
-			return -1 ;
+
+	len = (int) ndstrlen(val) +1 ;
+
+	if (len > node->val_size ) {
+		char *tmp = malloc(len);
+		if (!tmp) {
+			return -1;
+		}
+		free(node->value);
+		node->val_size = len;
+		node->value = tmp;
 	}
-	ndstrcpy(node->value,val) ;
+
+	ndstrncpy(node->value, val, node->val_size);
+
 	return 0 ;
 }
 //删除一个属性节点
@@ -1580,10 +1575,27 @@ READ_END :
 			//解析出错,没有遇到结束标志,或者是结束标志写错了
 			dealloc_xml(xmlnode) ;
 			*parse_end = NULL ;
-			*error_addr = paddr ;
+			if (paddr) {
+				*error_addr = paddr;
+			}
+			else {
+				*error_addr = xmlbuf;
+			}
 			return NULL ;
 		}
 		paddr = ndstrchr(paddr,'>') ;
+		
+		if (!paddr) {
+			dealloc_xml(xmlnode);
+			*parse_end = NULL;
+			if (paddr) {
+				*error_addr = paddr;
+			}
+			else {
+				*error_addr = xmlbuf;
+			}
+			return NULL;
+		}
 		paddr++ ;
 		*parse_end = paddr ;
 	} 
@@ -1607,6 +1619,7 @@ void _release_xml(ndxml *node)
 	if(node->value) {
 		free(node->value) ;
 		node->value = 0 ;
+		node->val_size = 0;
 	}
 
 	//dealloc attribute
@@ -1644,18 +1657,14 @@ struct ndxml_attr *alloc_attrib_node(const char *name, const char *value)
 	char *p ;
 	struct ndxml_attr *pnode ;
 	int len = (int) ndstrlen(name) +1;
-    int val_reallen =(int) ndstrlen(value) +1 ;
-	int val_len = val_reallen ;
-	//if(!len || !val_len)  {
-	//	return NULL;
-	//}
+    int val_reallen = value ? (int) ndstrlen(value) : 0 ;
+	int val_len = val_reallen + 1;
+	
 	len += 4 ;
 	len &= ~3 ;
     
-    val_len += 4 ;
-    val_len &= ~3 ;
-    
 	pnode = malloc(sizeof(struct ndxml_attr) + len + val_len) ;
+	
 	if(!pnode) {
 		return NULL ;
 	}
@@ -1663,14 +1672,13 @@ struct ndxml_attr *alloc_attrib_node(const char *name, const char *value)
 
 	pnode->name_size = len ;
 	pnode->value_size = val_len ;
-	//pnode->name = (char*) (pnode + 1) ;
-	//pnode->value = pnode->name + len ;
+
 	p = (char*) (pnode + 1) ;
-	ndstrcpy(p , name) ;
+	ndstrncpy(p , name,len) ;
 
 	p += len ;
     if (val_reallen > 0) {
-        ndstrcpy(p, value) ;
+        ndstrncpy(p, value, val_len) ;
     }
     else {
         *p = 0;
@@ -1699,22 +1707,30 @@ ndxml *_create_xmlnode(const char *name, const char *value)
 		return NULL ;
 	}
 	ndstrncpy(xmlnode->name,	name,MAX_XMLNAME_SIZE) ;
-	if(value) {
-		int len = (int) ndstrlen(value) ;
-		if(len> 0) {
-			len += 4 ;
-			len &= ~3 ;
-			xmlnode->value = malloc(len) ;
-			if(xmlnode->value){
-				ndstrcpy(xmlnode->value, value) ;	
-				xmlnode->val_size = len ;
-			}else {
-				free(xmlnode) ;
-				return NULL ;
-			}
-		}
+	if (-1 == ndxml_setval(xmlnode, value)) {
+		free(xmlnode);
+		return NULL;
 	}
+	return xmlnode;
+
+
 	
+// 	if(value) {
+// 		int len = (int) ndstrlen(value) ;
+// 		if(len> 0) {
+// 			len += 4 ;
+// 			len &= ~3 ;
+// 			xmlnode->value = malloc(len) ;
+// 			if(xmlnode->value){
+// 				ndstrcpy(xmlnode->value, value) ;	
+// 				xmlnode->val_size = len ;
+// 			}else {
+// 				free(xmlnode) ;
+// 				return NULL ;
+// 			}
+// 		}
+// 	}
+// 	
 	return xmlnode ;
 }
 
@@ -1773,8 +1789,9 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 		struct ndxml_attr *xml_attr = list_entry(pos, struct ndxml_attr, lst) ;
         char *attr_val1 = (char*)(xml_attr + 1) +xml_attr->name_size ;
 		pos = pos->next ;
-        if( attr_val1[0] ) {
+        if( attr_val1[0] && xml_attr->value_size > 0) {
 			textBuf[0] = 0;
+			attr_val1[xml_attr->value_size - 1] = 0;
 			
 			ndfprintf(fp, " %s=\"%s\"", (char*)(xml_attr + 1), _out_replace_text(attr_val1, textBuf, value_buffer_size));
         }
