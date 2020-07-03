@@ -88,7 +88,7 @@ static const char* _read_replace_text(const char *src, char *outText)
 }
 
 
-static  char* _out_replace_text(const char *src, char *outText,size_t len)
+static const char* _out_replace_text(const char *src, char *outText,size_t len)
 {
 	const char *p = src;	
 	char *ret = outText;
@@ -1353,8 +1353,272 @@ static const char* parse_marked(const char *xmlbuf, int size, const char **error
 	}
 	return NULL ;
 }
+
+//new function block
+int _parse_marked(ndxml *xml, const char *srcText)
+{
+	const char *p = srcText;
+
+	if ('?' == *p) {
+		p = ndstrstr(p + 1, "?>");
+		if (!p || !*p) {
+			return -1;
+		}
+		p += 2;
+	}
+	else if ('!' == *p) {
+		if (p[1] == '-' && p[2] == '-') {
+			p += 2;
+
+			p = ndstrstr(p + 1, "-->");
+			if (!p || !*p) {
+				return -1;
+			}
+			p += 3;
+
+		}
+		else {
+			return -1;
+		}
+	}
+
+
+	return (int)(p - srcText);
+}
+
+int _parse_attr(ndxml *xml, const char *srcText)
+{
+	const char *p = srcText;
+	do {
+		struct ndxml_attr *attrib_node;
+		char attr_name[MAX_XMLNAME_SIZE];
+		int ret;
+
+		p = ndstr_first_valid(p);
+		if (!p || !*p) {
+			return -1;
+		}
+		else if (*p == '/' || *p == '>') {
+			return (int)(p - srcText);
+		}
+
+		ret = ndstr_parse_variant_n(p, attr_name, sizeof(attr_name));
+		if (ret <= 0) {
+			return -1;
+		}
+		p += ret;
+		p = ndstrchr(p, '=');
+
+		if (!p ) {
+			return -1;
+		}
+		else {
+			char buf[4096];
+			buf[0] = 0;
+			p = _xml_read_attrval(p, buf, sizeof(buf));
+			if (!p) {
+				return -1;
+			}
+			//------------------
+
+			attrib_node = alloc_attrib_node(attr_name, buf);
+			if (attrib_node) {
+				list_add_tail(&attrib_node->lst, &xml->lst_attr);
+				(xml->attr_num)++;
+			}
+		}
+	} while (*p);
+
+	return -1;
+}
+
+int _parse_value(ndxml *xml, const char *srcText)
+{
+	const char *p = srcText;
+	size_t val_size;
+	
+	val_size = _xml_get_value_size(p);
+	if (val_size == 0) {
+		return -1;
+	}
+	++val_size;
+
+	val_size += 4; val_size &= ~3;
+	xml->value = malloc(val_size);
+	nd_assert(xml->value);
+	xml->value[0] = 0;
+	xml->val_size = val_size;
+
+	p = _xml_read_value(p, xml->value, val_size);
+	
+	return (int)(p - srcText);
+
+}
+
+//parse end 
+int _parse_end(ndxml *xml, const char *srcText)
+{
+	const char *p = ndstr_first_valid(srcText);
+	char end_name[MAX_XMLNAME_SIZE+4];
+
+	int ret = ndstr_parse_variant_n(p, end_name, MAX_XMLNAME_SIZE);
+	if (ret <= 0) {
+		return -1;
+	}
+
+	p += ret;
+	if (0!=ndstricmp(xml->name,end_name)){
+		return -1;
+	}
+
+	p = strchr(p,'>');
+	if (!p || !*p) {
+		return -1;
+	}
+	++p;
+	return (int)(p - srcText);
+}
+
+int _parse_new_xml(ndxml **xmlOut, const char *srcText, const char **pErrorAddr)
+{
+	ndxml *xml;
+	int ret = 0;
+	const char *p = ndstr_first_valid(srcText);
+
+	*xmlOut = NULL;
+	*pErrorAddr = srcText;
+	if (!p || !*p) {
+		return -1;
+	}
+
+	if (*p != '<') {
+		return -1;
+	}
+
+	//skip mark-comment
+	++p;
+	if (*p == '!' || *p == '?' ) {
+		ret = _parse_marked(NULL, p);
+		if (ret > 0) {
+			p += ret;
+			*xmlOut = NULL;
+			*pErrorAddr = srcText;
+			return (int)(p - srcText);
+		}
+		else {
+			return -1;
+		}
+	}
+	//parse name 
+	xml =  alloc_xml();
+	nd_assert(xml);
+	*xmlOut = xml;
+
+	ret = ndstr_parse_variant_n(p, xml->name, MAX_XMLNAME_SIZE);
+	if (ret == -1) {
+		dealloc_xml(xml);
+		return -1;
+	}
+	p += ret;
+
+	*pErrorAddr = p;
+	//parse attribtue 
+	ret = _parse_attr(xml, p);
+	
+	if (-1 == ret) {
+		dealloc_xml(xml);
+		return -1;
+	}
+	p += ret;
+
+	//check is end
+	if (*p == '/') {
+		//parse end 
+		if (p[1] == '>') {
+			p+= 2 ;
+			*pErrorAddr = srcText;
+			return (int)(p - srcText);
+		}
+		else {
+			dealloc_xml(xml);
+			return -1;
+		}
+	}
+	else if (*p != '>') {
+		dealloc_xml(xml);
+		return -1;
+	}
+
+	p = ndstr_first_valid(p+1);
+	if (!p || !*p) {
+		return -1;
+	}
+
+	if (*p == '<') {
+		do {
+			ndxml *subxml = NULL;
+			if (p[1] == '/') {
+				p+=2;
+				break;
+			}
+
+			ret = _parse_new_xml(&subxml, p,pErrorAddr);
+			if (-1 == ret) {
+				dealloc_xml(xml);
+				return -1;
+			}
+			if (subxml) {
+				list_add_tail(&subxml->lst_self, &xml->lst_sub);
+				subxml->parent = xml;
+				xml->sub_num++;
+			}
+			p += ret;
+			p = ndstr_first_valid(p);
+		} while (*p == '<');
+	}
+	else {
+		ret = _parse_value(xml, p);
+		if (-1 == ret) {
+			dealloc_xml(xml);
+			return -1;
+		}
+		p += ret;
+		p += 2;// skip </
+
+	}
+
+	*pErrorAddr = p;
+
+	ret = _parse_end(xml, p);
+	if (-1 == ret) {
+		dealloc_xml(xml);
+		return -1;
+	}
+	p += ret;
+	return (int)(p - srcText);
+
+}
 //从内存块中解析出一个XML节点
 ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const char **error_addr)
+{
+	ndxml *xmlnode = NULL;
+
+	int ret = _parse_new_xml(&xmlnode, xmlbuf, error_addr);
+	if (ret == -1) {
+		if (*error_addr == NULL) {
+			*error_addr = xmlbuf;
+		}
+		return NULL;
+	}
+	else {
+		*parse_end = xmlbuf + ret;
+		*error_addr = NULL;
+		return xmlnode;
+	}
+
+}
+
+#if 0
 {
 	int ret = 0;
 	ndxml *xmlnode =NULL ;
@@ -1601,6 +1865,7 @@ READ_END :
 	} 
 	return xmlnode ;
 }
+#endif
 
 //申请一个节点内存
 ndxml *alloc_xml(void)
@@ -1791,7 +2056,8 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 		pos = pos->next ;
         if( attr_val1[0] && xml_attr->value_size > 0) {
 			textBuf[0] = 0;
-			attr_val1[xml_attr->value_size - 1] = 0;
+			//attr_val1[xml_attr->value_size - 1] = 0;
+			nd_assert(strlen(attr_val1) < (size_t)xml_attr->value_size);
 			
 			ndfprintf(fp, " %s=\"%s\"", (char*)(xml_attr + 1), _out_replace_text(attr_val1, textBuf, value_buffer_size));
         }
@@ -1803,6 +2069,7 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 	//save value of sub-xmlnode
 	if(xmlnode->value && xmlnode->value[0]) {
 		textBuf[0] = 0;
+		nd_assert(strlen(xmlnode->value) < (size_t)xmlnode->value);
 		ndfprintf(fp, ">%s</%s>\n", _out_replace_text(xmlnode->value, textBuf, value_buffer_size), xmlnode->name);
 	}
 	else if (xmlnode->sub_num>0){
