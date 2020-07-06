@@ -64,7 +64,7 @@ void run_print(const char *src, struct vm_cpu *vm)
 		return ;
 	}
 
-	addr = ndstr_parse_word_n(addr, buf, 128);
+	addr = ndstr_parse_variant_n(addr, buf, 128);
 	if(!addr) 
 		return ;
 	if(0==ndstricmp(buf, "reg")) {
@@ -118,7 +118,7 @@ int try_run_dbgcmd(char *linebuf, struct vm_cpu *vm)
 	const char *addr = ndstr_first_valid(linebuf) ;
 		
 	buf[0] = 0 ;
-	addr = ndstr_parse_word_n(addr, buf, 128) ;
+	addr = ndstr_parse_variant_n(addr, buf, 128) ;
 	if(!addr) {
 		return -1 ;
 	}

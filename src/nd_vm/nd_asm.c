@@ -121,7 +121,7 @@ char *get_ins_name(vm_ins ins)
 char *read_instruction(char *src,  vm_ins *instruction)
 {
 	char buf[128]; 
-	char *ret_addr = (char *) ndstr_parse_word_n(src, buf, 128) ;
+	char *ret_addr = (char *)ndstr_parse_variant_n(src, buf, 128) ;
 	if(!ret_addr) {
 		vm_error("syntax error: [%s]\n",src) ;
 		return NULL ;
@@ -178,7 +178,7 @@ int asm_read_operand(char *addr, vm_data_src *data_desc, vm_value *val, char **r
 		*val =*((vm_value*) (&mm_addr) ); 
 	}
 	else if(IS_BIG_LATIN(*addr) || IS_LITTLE_LATIN(*addr)){
-		addr = (char *)ndstr_parse_word_n(addr, buf, 20);
+		addr = (char *)ndstr_parse_variant_n(addr, buf, 20);
 		if(0==ndstricmp("reg1", buf)) {
 			*data_desc = EDS_REG1 ;
 		}

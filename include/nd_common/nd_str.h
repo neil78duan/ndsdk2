@@ -40,20 +40,30 @@ ND_COMMON_API int ndstr_is_naturalnumber(const char *src);
 ND_COMMON_API const char *ndstr_read_numerals(const char *src, char *desc, int *isok) ;
 
 //parse the string to world , _ , number,and latin letter is valid
-ND_COMMON_API const char *ndstr_parse_word(const char *src, char *outstr);
-ND_COMMON_API const char *ndstr_parse_word_n(const char *src, char *outstr, int n);
+ND_COMMON_API const char *ndstr_parse_word_n(const char *src, char *outstr, size_t n);
+static __INLINE__  const char *ndstr_parse_word(const char *src, char *outstr)
+{
+	return ndstr_parse_word_n(src, outstr, (size_t)-1);
+}
 
+//parse the string to world , _ , number,and latin letter is valid. The only difference with ndstr_parse_word_n is include '.'
+ND_COMMON_API const char* ndstr_parse_variant_n(const char *src, char *outstr, size_t n); //return NULL error ,else return next addr
+static __INLINE__ const char* ndstr_parse_variant(const char *src, char *outstr)
+{
+	return ndstr_parse_variant_n(src, outstr, (size_t)-1);
+}
 
-ND_COMMON_API int ndstr_parse_variant_n(const char *src, char *outstr, int n); //return 0 nothing, -1 error ,else data size
 
 //Parse string to command line , return number of commands-lines
 ND_COMMON_API int ndstr_parse_command(const char *input_text, char *argv[], int bufize, int number);
 
+//parse string to substring ,untill space, tab ..
+ND_COMMON_API const char *ndstr_parse_string(const char *src, char *outstr);
+ND_COMMON_API const char *ndstr_parse_string_n(const char *src, char *outstr, size_t n);
+
 ND_COMMON_API int ndstr_get_ip(const char *src, NDUINT32 *ip);
 ND_COMMON_API int ndstr_get_ip6(const char *src, ndip_t *ip);
 
-//parse string to substring ,untill space, tab ..
-ND_COMMON_API const  char *ndstr_parse_string(const char *src, char *outstr);
 
 /*read string untill the 'end' */
 ND_COMMON_API const char *ndstr_str_end(const char *src, char *outstr, const char end);

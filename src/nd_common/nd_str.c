@@ -220,75 +220,97 @@ const char *ndstr_read_numerals(const char *src, char *desc, int *isok)
 	return src ;
 }
 
-
-const char *ndstr_parse_word(const char *src, char *outstr)
-{
-	register unsigned char a ;
-	while(*src) {
-		a = (unsigned char)*src ;
-		if (IS_NUMERALS(a) || IS_BIG_LATIN(a) || IS_LITTLE_LATIN(a) || a == '_' || a == '$' || a=='@'){
-			*outstr++ = *src++ ;
-		}
-//#ifndef ND_ANSI
-		else if (__s_code_type !=E_SRC_CODE_ANSI && a>(unsigned char)0x80){		//chinese
-			_read_word((unsigned char**)&outstr, (unsigned  char**)&src) ;
-			//*outstr++ = *src++ ;
-			//*outstr++ = *src++ ;
-		}
-//#endif
-		else{
-			break ;
-		}
-	}
-	*outstr = 0 ;
-	return *src?src:NULL ;
-}
-
 const char *ndstr_parse_string(const char *src, char *outstr)
 {
-	register unsigned char a ;
-	while(*src) {
-		a = (unsigned char)*src ;
-		if (a<=0x20)	{
-			break ;
-		}
-		_read_word((unsigned char**)&outstr, (unsigned  char**)&src) ;
-		/*
-		if(a > 0x20){
-			*outstr++ = *src++ ;
-		}
-
-		else if(a>(unsigned char)0x80){		//chinese
-			*outstr++ = *src++ ;
-			*outstr++ = *src++ ;
-		}
-		else{
-			break ;
-		}*/
-
-	}
-	*outstr = 0 ;
-	return *src?src:NULL ;
+	return ndstr_parse_string_n(src, outstr, (size_t)-1);
+// 	register unsigned char a;
+// 	src = ndstr_first_valid(src);
+// 	if (!src || !*src) {
+// 		*outstr = 0;
+// 		return NULL;
+// 	}
+// 	while (*src) {
+// 		a = (unsigned char)*src;
+// 		if (a <= 0x20) {
+// 			break;
+// 		}
+// 		_read_word((unsigned char**)&outstr, (unsigned  char**)&src);
+// 
+// 	}
+// 	*outstr = 0;
+// 	return *src ? src : NULL;
 }
 
+const char *ndstr_parse_string_n(const char *src, char *outstr,size_t n)
+{
+	int ret = 0;
+	register unsigned char a;
+	src = ndstr_first_valid(src);
+	if (!src || !*src) {
+		*outstr = 0;
+		return NULL;
+	}
+	while (*src && n > 0) {
+		a = (unsigned char)*src;
+		if (a <= 0x20) {
+			break;
+		}
+		ret = _read_word((unsigned char**)&outstr, (unsigned  char**)&src);
+		n -= ret;
 
-const char *ndstr_parse_word_n(const char *src, char *outstr, int n)
+	}
+	*outstr = 0;
+	return *src ? src : NULL;
+}
+// 
+// const char *ndstr_parse_word(const char *src, char *outstr)
+// {
+// 	register unsigned char a ;
+// 	
+// 	src = ndstr_first_valid(src);
+// 	if (!src || !*src) {
+// 		*outstr = 0;
+// 		return NULL;
+// 	}
+// 
+// 	while(*src) {
+// 		a = (unsigned char)*src ;
+// 		if (IS_NUMERALS(a) || IS_BIG_LATIN(a) || IS_LITTLE_LATIN(a) || a == '_' || a == '$' || a=='@'){
+// 			*outstr++ = *src++ ;
+// 		}
+// 		else if (__s_code_type !=E_SRC_CODE_ANSI && a>(unsigned char)0x80){		//chinese
+// 			_read_word((unsigned char**)&outstr, (unsigned  char**)&src) ;
+// 		}
+// 		else{
+// 			break ;
+// 		}
+// 	}
+// 	*outstr = 0 ;
+// 	return *src?src:NULL ;
+// }
+
+
+
+const char *ndstr_parse_word_n(const char *src, char *outstr, size_t n)
 {
 	register unsigned char a ;
+
+	src = ndstr_first_valid(src);
+	if (!src || !*src) {
+		*outstr = 0;
+		return NULL;
+	}
+
 	while(*src && n-- > 0) {
 		a = (unsigned char)*src ;
-		if(IS_NUMERALS(a) || IS_BIG_LATIN(a) || IS_LITTLE_LATIN(a) || a=='_' || a=='.'){
+		if(IS_NUMERALS(a) || IS_BIG_LATIN(a) || IS_LITTLE_LATIN(a) || a=='_' || a == '$' || a == '@'){
 			*outstr++ = *src++ ;
 		}
 
-//#ifndef ND_ANSI
 		else if (__s_code_type != E_SRC_CODE_ANSI && a>(unsigned char)0x80){		//chinese
 			int ret  = _read_word((unsigned char**)&outstr, (unsigned  char**)&src) ;
 			n -= ret -1 ;
-			//*outstr++ = *src++ ;
-			//*outstr++ = *src++ ;
 		}
-//#endif
 		else{
 			break ;
 		}
@@ -298,10 +320,17 @@ const char *ndstr_parse_word_n(const char *src, char *outstr, int n)
 }
 
 //return 0 nothing, -1 error ,else data size
-int ndstr_parse_variant_n(const char *src, char *outstr, int n)
+
+const char* ndstr_parse_variant_n(const char *src, char *outstr, size_t n)
 {
-	const char *p = src;
 	register unsigned char a;
+
+	src = ndstr_first_valid(src);
+	if (!src || !*src) {
+		*outstr = 0;
+		return NULL;
+	}
+
 	
 	while (*src && n-- > 0) {
 		a = (unsigned char)*src;
@@ -310,26 +339,28 @@ int ndstr_parse_variant_n(const char *src, char *outstr, int n)
 			int ret = _read_word((unsigned char**)&outstr, (unsigned  char**)&src);
 			n -= ret - 1;
 		}
-		else if (IS_NUMERALS(a) || IS_BIG_LATIN(a) || IS_LITTLE_LATIN(a) || a == '_' || a == '.' || a=='$'){
+		else if (IS_NUMERALS(a) || IS_BIG_LATIN(a) || IS_LITTLE_LATIN(a) || a == '_' || a == '.' || a=='$' || a == '@'){
 			*outstr++ = *src++;
 		}
 		else{
-			if (p == src) {
-				return -1;
-			}
-			else {
-				break;
-			}
+			break;
 		}
 	}
 	*outstr = 0;
-	return (int)(src - p);
+	return src;
 }
 
 
 const char *_ndstr_read_cmd(const char *src, char *outstr, int n, char endmark)
 {
 	register unsigned char a ;
+	
+	src = ndstr_first_valid(src);
+	if (!src || !*src) {
+		*outstr = 0;
+		return NULL;
+	}
+	
 	while(*src && n-- > 0) {
 		a = (unsigned char)*src ;
 		if (a=='\\') {
@@ -362,7 +393,7 @@ int ndstr_parse_command(const char *input_text, char *argv[], int bufize, int nu
 		if (*next_text==0x24) { // $
 			char envValName[1024] ;
 			envValName[0] = 0 ;
-			next_text = ndstr_parse_word(++next_text, envValName) ;
+			next_text = ndstr_parse_word_n(++next_text, envValName,sizeof(envValName)) ;
 			if (envValName[0]) {
 				char *envVal = getenv(envValName) ;
 				if (envVal && envVal[0]) {

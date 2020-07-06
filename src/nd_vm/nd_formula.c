@@ -238,7 +238,7 @@ int read_operand(const char *textbuf,char* operand_buf, char **next)
 	else {
 		//可能是函数
 		char optmp[OPERAND_SIZE] ;
-		textbuf = ndstr_parse_word(textbuf, operand_buf) ;
+		textbuf = ndstr_parse_word_n(textbuf, operand_buf,OPERAND_SIZE) ;
 		if(is_function(operand_buf) ) {
 			*next = (char*)textbuf;
 			return 3 ;

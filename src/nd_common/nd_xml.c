@@ -512,7 +512,7 @@ int xml_parse_fileinfo(ndxml_root *xmlroot, char *start, char **endaddr, char **
 		*erraddr = start;
 		
 		attr_name[0] = 0;
-		p = ndstr_parse_word(p, attr_name);
+		p = ndstr_parse_word_n(p, attr_name,sizeof(attr_name));
 		if (attr_name[0] == 0)	{
 			break;
 		}
@@ -1238,7 +1238,9 @@ int ndxml_setval(ndxml *node , const char *val)
 		if (!tmp) {
 			return -1;
 		}
-		free(node->value);
+		if (node->value) {
+			free(node->value);
+		}
 		node->val_size = len;
 		node->value = tmp;
 	}
@@ -1307,52 +1309,52 @@ int ndxml_del_all_children(ndxml *parent)
 }
 //////////////////////////////////////////////////////////////////////////
 //È¥µô×¢ÊÍ
-static const char* parse_marked(const char *xmlbuf, int size, const char **error_addr) 
-{
-	const char *pstart = xmlbuf ;
-	const char *paddr;
-	
-	while(pstart< xmlbuf+size) {
-		*error_addr = pstart ;
-		//paddr = ndstrchr(pstart, '<') ;
-		paddr =  ndstr_first_valid(pstart) ;
-		if (!paddr || *paddr != '<') {
-			//*error_addr = pstart ;
-			return NULL ;
-		}
-
-		if(!paddr || paddr >= xmlbuf+size) {
-			*error_addr = 0 ;
-			return NULL ;
-		}
-		if('?'==paddr[1]) {
-			paddr = ndstrstr(paddr+2, "?>") ;
-			if(!paddr || paddr >= xmlbuf+size) {
-				return NULL ;
-			}
-			paddr += 2 ;
-		}
-		else if(paddr[1]=='!' ) {
-			if(paddr[2]=='-' && paddr[3]=='-') {
-				paddr = ndstrstr(paddr+4, "-->") ;
-				if(!paddr || paddr >= xmlbuf+size) {
-					return NULL ;
-				}
-				paddr += 3 ;
-			}
-			else {
-				return NULL ;
-			}
-		}
-		else {
-			*error_addr = NULL ;
-			return paddr ;
-		}
-		
-		pstart = paddr ;
-	}
-	return NULL ;
-}
+// static const char* parse_marked(const char *xmlbuf, int size, const char **error_addr) 
+// {
+// 	const char *pstart = xmlbuf ;
+// 	const char *paddr;
+// 	
+// 	while(pstart< xmlbuf+size) {
+// 		*error_addr = pstart ;
+// 		//paddr = ndstrchr(pstart, '<') ;
+// 		paddr =  ndstr_first_valid(pstart) ;
+// 		if (!paddr || *paddr != '<') {
+// 			//*error_addr = pstart ;
+// 			return NULL ;
+// 		}
+// 
+// 		if(!paddr || paddr >= xmlbuf+size) {
+// 			*error_addr = 0 ;
+// 			return NULL ;
+// 		}
+// 		if('?'==paddr[1]) {
+// 			paddr = ndstrstr(paddr+2, "?>") ;
+// 			if(!paddr || paddr >= xmlbuf+size) {
+// 				return NULL ;
+// 			}
+// 			paddr += 2 ;
+// 		}
+// 		else if(paddr[1]=='!' ) {
+// 			if(paddr[2]=='-' && paddr[3]=='-') {
+// 				paddr = ndstrstr(paddr+4, "-->") ;
+// 				if(!paddr || paddr >= xmlbuf+size) {
+// 					return NULL ;
+// 				}
+// 				paddr += 3 ;
+// 			}
+// 			else {
+// 				return NULL ;
+// 			}
+// 		}
+// 		else {
+// 			*error_addr = NULL ;
+// 			return paddr ;
+// 		}
+// 		
+// 		pstart = paddr ;
+// 	}
+// 	return NULL ;
+// }
 
 //new function block
 int _parse_marked(ndxml *xml, const char *srcText)
@@ -1402,11 +1404,11 @@ int _parse_attr(ndxml *xml, const char *srcText)
 			return (int)(p - srcText);
 		}
 
-		ret = ndstr_parse_variant_n(p, attr_name, sizeof(attr_name));
-		if (ret <= 0) {
+		p = ndstr_parse_word_n(p, attr_name, sizeof(attr_name));
+		if (!p) {
 			return -1;
 		}
-		p += ret;
+
 		p = ndstrchr(p, '=');
 
 		if (!p ) {
@@ -1461,12 +1463,11 @@ int _parse_end(ndxml *xml, const char *srcText)
 	const char *p = ndstr_first_valid(srcText);
 	char end_name[MAX_XMLNAME_SIZE+4];
 
-	int ret = ndstr_parse_variant_n(p, end_name, MAX_XMLNAME_SIZE);
-	if (ret <= 0) {
+	p = ndstr_parse_word_n(p, end_name, MAX_XMLNAME_SIZE);
+	if (!p) {
 		return -1;
 	}
 
-	p += ret;
 	if (0!=ndstricmp(xml->name,end_name)){
 		return -1;
 	}
@@ -1514,12 +1515,11 @@ int _parse_new_xml(ndxml **xmlOut, const char *srcText, const char **pErrorAddr)
 	nd_assert(xml);
 	*xmlOut = xml;
 
-	ret = ndstr_parse_variant_n(p, xml->name, MAX_XMLNAME_SIZE);
-	if (ret == -1) {
+	p = ndstr_parse_word_n(p, xml->name, MAX_XMLNAME_SIZE);
+	if (!p) {
 		dealloc_xml(xml);
 		return -1;
 	}
-	p += ret;
 
 	*pErrorAddr = p;
 	//parse attribtue 
@@ -1536,7 +1536,6 @@ int _parse_new_xml(ndxml **xmlOut, const char *srcText, const char **pErrorAddr)
 		//parse end 
 		if (p[1] == '>') {
 			p+= 2 ;
-			*pErrorAddr = srcText;
 			return (int)(p - srcText);
 		}
 		else {
@@ -1661,15 +1660,12 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		return NULL ;
 	}
 
-	ret = ndstr_parse_variant_n(paddr, xmlnode->name,  MAX_XMLNAME_SIZE);
-	if (ret <= 0)	{
+	p = ndstr_parse_variant_n(paddr, xmlnode->name,  MAX_XMLNAME_SIZE);
+	if (!p)	{
 		dealloc_xml(xmlnode);
 		*parse_end = NULL;
 		*error_addr = paddr;
 		return NULL;
-	}
-	else {
-		paddr += ret;
 	}
 
 	*error_addr = paddr;
@@ -1696,14 +1692,11 @@ ndxml *parse_xmlbuf(const char *xmlbuf, int size, const char **parse_end, const 
 		*error_addr = paddr;
 		//paddr = ndstr_parse_word(paddr, attr_name) ;
 
-		ret = ndstr_parse_variant_n(paddr, attr_name, MAX_XMLNAME_SIZE);
-		if (ret <= 0)	{
+		p = ndstr_parse_variant_n(paddr, attr_name, MAX_XMLNAME_SIZE);
+		if (!p)	{
 			dealloc_xml(xmlnode);
 			*parse_end = NULL;
 			return NULL;
-		}
-		else {
-			paddr += ret;
 		}
 
 

@@ -80,7 +80,7 @@ int run_cmd(char *linebuf, char **run_addr)
 	}
 
 	buf[0] = 0 ;
-	addr = ndstr_parse_word_n(addr, buf, 128) ;
+	addr = ndstr_parse_variant_n(addr, buf, 128) ;
 	if(!addr) {
 		return -1 ;
 	}
