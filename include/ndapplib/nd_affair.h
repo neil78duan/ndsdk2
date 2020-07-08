@@ -327,10 +327,6 @@ public:
 	bool SetNotify(bool bflag )
 	{
 		bool ret =	m_notify ? true : false ;
-		if (m_affair_stat){
-			return ret ;
-		}
-
 		m_notify = bflag ? 1:0;
 		return ret ;
 	}
@@ -349,9 +345,7 @@ public:
 	bool SetSyncDB(bool bflag) 
 	{
 		bool ret =	m_syncdb ? true : false ;
-		if (m_affair_stat){
-			return ret ;
-		}
+		
 
 		m_syncdb = bflag ? 1:0;
 		return ret ;
