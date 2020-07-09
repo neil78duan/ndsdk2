@@ -35,25 +35,6 @@ private:
 	bool m_oldflag ;
 };
 
-template<class TAfair>
-class  ND_COMMON_CLASS SyndbFlagHelper
-{
-public:
-	SyndbFlagHelper(TAfair *pa, int flag) 
-	{
-		m_oldflag = pa->SetSyncDB(flag?true:false) ;
-		m_pa = pa ;
-	}
-	~SyndbFlagHelper() 
-	{
-		if (m_pa){
-			m_pa->SetSyncDB(m_oldflag) ;
-		}
-	}
-private:
-	TAfair *m_pa ;
-	bool m_oldflag ;
-};
 
 template<class TAfair>
 class NDAffairHelper
@@ -125,13 +106,9 @@ class NDAffair
 {
 	typedef NDAffair<TIndex ,  TValue > _MyType ;
 public:
-	typedef SyndbFlagHelper<_MyType> FlagSaveHelper ;
 	typedef EnableAffairHelper<_MyType> FlagEnableHelper ;
-	typedef SyndbFlagHelper<_MyType> FlagSyndbHelper ;
-	
 	typedef NotifyFlagHelper<_MyType> FlagNtfClientHelper ;
 	typedef NDAffairHelper<_MyType> NDAffairBeginHelper ;
-
 	typedef NDSetCommitNtfHelper<_MyType> FlagCommitNtfHelper;
 	
 	
@@ -151,7 +128,6 @@ public:
         , m_affair_stat(0)
         , m_notify(0)
         , m_enable(0)
-        , m_syncdb(0)
 		, m_commitNtf(0)
 		, m_dataChanged(0)
 	{
@@ -174,30 +150,25 @@ public:
 			//m_num = 0;
 			m_buf.clear() ;
 			m_affair_stat = 1 ;
+
+			m_notify_backup = m_notify;
+			m_commitNtf_backup = m_commitNtf;
+
 		}
 		return m_nCount ;
 	}
-	int _affair_commit() 
-	{
-		if (!m_enable || m_nCount <= 0) {
-			return -1;
-		}
-		--m_nCount ;
-		return m_nCount ;
-	}
+// 	int _affair_commit() 
+// 	{
+// 		if (!m_enable || m_nCount <= 0) {
+// 			return -1;
+// 		}
+// 		--m_nCount ;
+// 		return m_nCount ;
+// 	}
 	
 	virtual void Begin() 
 	{
 		_affair_begin() ;
-// 		if (!m_enable){
-// 			return ;
-// 		}
-// 		if (m_nCount++ == 0 )	{
-// 			nd_assert(m_affair_stat==0) ;
-// 			m_num = 0;
-// 			m_affair_stat = 1 ;
-// 		}
-	
 	}
 	virtual void Commit() 
 	{
@@ -235,6 +206,10 @@ public:
 			m_enable = 1 ;
 		}
 		m_affair_stat = 0 ;
+
+		m_notify = m_notify_backup;
+		m_commitNtf = m_commitNtf_backup;
+
 		//m_num = 0;
 		m_buf.clear() ;
 	}
@@ -261,8 +236,10 @@ public:
 			m_enable = 1 ;
 		}
 		m_affair_stat = 0 ;
-		//m_dataChanged = 0;
-		//m_num = 0;
+
+		m_notify = m_notify_backup;
+		m_commitNtf = m_commitNtf_backup;
+
 		m_buf.clear() ;
 	}
 	virtual void Undo(const TIndex &index, const  TValue &old_val, int optype)
@@ -276,7 +253,6 @@ public:
 	void Reset() 
 	{
 		m_buf.clear() ;
-		//m_num = 0;
 		m_affair_stat = 0;
 		m_nCount = 0 ;
 	}
@@ -342,31 +318,9 @@ public:
 		return ret ;
 	}
 
-	bool SetSyncDB(bool bflag) 
-	{
-		bool ret =	m_syncdb ? true : false ;
-		
-
-		m_syncdb = bflag ? 1:0;
-		return ret ;
-	}
-
-	void EnableAffair(bool bflag = true)
-	{
-		if (m_affair_stat){
-			return  ;
-		}
-		m_enable = bflag ? 1:0;
-	}
-
-
 	bool SetCommitNtf(bool bflag)
 	{
 		bool ret = m_commitNtf ? true : false;
-		if (m_affair_stat){
-			return ret;
-		}
-
 		m_commitNtf = bflag ? 1 : 0;
 		return ret;
 	}
@@ -375,14 +329,12 @@ public:
 	{
 		m_enable =1 ;
 		m_notify =1 ;
-		m_syncdb =1 ;
 		m_commitNtf = 1;
 	}
 	void DisableAll()
 	{
 		m_enable =0 ;
 		m_notify =0 ;
-		m_syncdb =0 ;
 		m_commitNtf = 0;
 		
 	}
@@ -401,7 +353,6 @@ public:
 	void ClearDataChange() {
 		m_dataChanged = 0;
 	}
-	bool CheckSyncDB() {return m_syncdb?true :false; }
 	bool CheckNotify() {return m_notify?true :false; }
 
 	typedef std::vector<back_op> affair_vct;
@@ -413,14 +364,16 @@ public:
 protected:
 
 	int m_nCount;           // 提交计数, 解决多次begin, 多次commit的问题.(这是暂行方案)
-	//NDUINT32 m_num:16 ;
+
 	NDUINT32 m_affair_stat:1 ;   //0 not set 1 begin 
 	NDUINT32 m_enable:1 ;		//是否打开事务
-	NDUINT32 m_notify:1 ;
-	NDUINT32 m_syncdb:1 ;
+	NDUINT32 m_notify:1 ;		// notify client
 	NDUINT32 m_commitNtf : 1;  //callback when commit 
-	NDUINT32 m_dataChanged : 1;  //data change 
-	//back_op m_buf[number] ;
+	NDUINT32 m_dataChanged : 1;  //data change
+
+	NDUINT32 m_notify_backup : 1;
+	NDUINT32 m_commitNtf_backup : 1;
+
 	affair_vct m_buf ;
 };
 
