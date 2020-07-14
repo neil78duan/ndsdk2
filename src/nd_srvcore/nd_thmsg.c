@@ -601,7 +601,6 @@ static int delay_rand_close_handler(nd_thsrv_msg *msg)
 	NDUINT16 interval = rand();
 	struct thread_pool_info *pthinfo = (struct thread_pool_info *) msg->th_userdata;
 
-	//struct listen_contex *lc = (struct listen_contex *)pthinfo->lh;
 
 	NDUINT16 sessionid = *(NDUINT16*)(msg->data);
 	
