@@ -522,6 +522,18 @@ const char *ndstr_nstr_end(const char *src, char *outstr, const char end, int n)
 	return src ;
 }
 
+const char *ndstr_replace(char *text, char cmp, char replace)
+{
+	char *p = text;
+	while (*text) {
+		if (*text == cmp) {
+			*text = replace;
+		}
+		++text;
+	}
+	return p;
+}
+
 const char *ndstr_str_ansi(const char *src, char *outstr, const char end)
 {
 	while (*src) {

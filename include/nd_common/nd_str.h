@@ -73,6 +73,8 @@ ND_COMMON_API const char *ndstr_nstr_end(const char *src, char *outstr, const ch
 ND_COMMON_API const char *ndstr_str_ansi(const char *src, char *outstr, const char end);
 ND_COMMON_API const char *ndstr_nstr_ansi(const char *src, char *outstr, const char end, int n);
 
+ND_COMMON_API const char *ndstr_replace(char *text, char cmp, char replace);
+
 /*text comp ignore caps*/
 ND_COMMON_API int ndstricmp(const char *src, const char *desc);
 ND_COMMON_API int ndstricmp_n(const char *src, const char *desc, int n);
