@@ -32,6 +32,7 @@ ND_COMMON_API int ndstr_read_utf8char(char **src, char** dest) ;
 
 /* skip the first char can not printable (include space tab) */
 ND_COMMON_API const char *ndstr_first_valid(const char *src) ;
+ND_COMMON_API const char *ndstr_first_word(const char *src);
 
 ND_COMMON_API int ndstr_is_numerals(const char *src);
 

@@ -290,6 +290,18 @@ const char *ndstr_parse_string_n(const char *src, char *outstr,size_t n)
 // }
 
 
+const char *ndstr_first_word(const char *src)
+{
+	register unsigned char a;
+
+	while (*src ) {
+		a = (unsigned char)*src++;
+		if (IS_NUMERALS(a) || IS_BIG_LATIN(a) || IS_LITTLE_LATIN(a) || a == '_' || a == '$' || a == '@' || a >0x80) {
+			break;
+		}
+	}
+	return src;
+}
 
 const char *ndstr_parse_word_n(const char *src, char *outstr, size_t n)
 {
