@@ -337,7 +337,9 @@ int ndxml_load_from_buf(const char *fileName, const char *buf, size_t size, ndxm
 				}
 				ndxml_setattrval(xmlroot, "encoding", toEncodeType);
 			}
-			codeType = ndstr_set_code(nNeedType);
+			if (nNeedType != ndstr_get_code()) {
+				codeType = ndstr_set_code(nNeedType);
+			}
 		}
 		else {
 			codeType = xml_set_code_type(xmlroot);

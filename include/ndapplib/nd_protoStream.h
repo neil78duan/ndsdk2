@@ -141,9 +141,9 @@ protected:
 	int _dumpTobuf(char *buf, size_t size);
 
 	int _ReadTypeSize(eNDnetStreamMarker &type, NDUINT8 &size);
-	bool m_bStruckEndMarker;
-	bool m_bSkipEndMarker;
-	bool m_bSkipEndAllStream;
+	bool m_bStruckEndMarker;	// now read end-mark
+	bool m_bSkipEndMarker;		// the peer told this packet need skip end-mark
+	bool m_bSkipEndAllStream; // user set this NDProtoReadStream need skip end-marker
 
 	char *_org_start_addr;
 	char *_op_addr;

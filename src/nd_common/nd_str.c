@@ -18,6 +18,10 @@ int ndstr_set_code(int type)
 	__s_code_type = type;
 	return ret;
 }
+int ndstr_get_code()
+{
+	return __s_code_type;
+}
 const char* nd_get_encode_name(int encode_type)
 {
 	switch (encode_type)
