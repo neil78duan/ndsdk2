@@ -172,7 +172,7 @@ MSG_ENTRY_INSTANCE(nd_get_message_name_handler)
 	ND_TRACE_FUNC();
 	NDIStreamMsg inmsg(msg);
 	NDOStreamMsg omsg(inmsg.MsgMaxid(), inmsg.MsgMinid());
-	NDUINT16 maxID, minID;
+	NDUINT8 maxID, minID;
 
 	if (-1 == inmsg.Read(maxID)) {
 		return 0;
@@ -191,7 +191,7 @@ MSG_ENTRY_INSTANCE(nd_get_message_name_handler)
 
 	omsg.Write(minID);
 
-	omsg.Write((NDUINT8*)p);
+	omsg.Write(p);
 
 	netconn->SendMsg(omsg) ;
 	//ND_MSG_SEND(nethandle, omsg.GetMsgAddr(), h_listen);
@@ -444,6 +444,6 @@ MSG_ENTRY_INSTANCE(nd_close_exist_msg_handler)
 		h_listen = getbase_inst()->GetDeftListener()->GetHandle();
 		nd_assert(h_listen);
 	}
-	nd_msgentry_install(h_listen, (nd_usermsg_func)error_ack_message, maxID, minID, EPL_READY, NULL);
+	nd_msgentry_install(h_listen, (nd_usermsg_func)error_ack_message, maxID, minID, EPL_READY, "handler closed!!");
 	return 0;
 }

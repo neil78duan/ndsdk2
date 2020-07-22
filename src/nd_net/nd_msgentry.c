@@ -74,17 +74,17 @@ static void destroy_msgroot(nd_handle h)
 {
 	struct nd_msgentry_root *root = (struct nd_msgentry_root *)h;
 	int i = 0;
-	for (i = 0; i < root->main_num;i++) {
-		int j = 0;
-		struct sub_msgentry *psub = &root->sub_buf[i];
-		for (j = 0; j < SUB_MSG_NUM; j++) {
-			struct  nd_msg_entry_node *node = &psub->msg_buf[j];
-			if (node->is_script)	{
-				free((void*)node->entry);
-				node->entry = NULL;
-			}
-		}
-	}
+// 	for (i = 0; i < root->main_num;i++) {
+// 		int j = 0;
+// 		struct sub_msgentry *psub = &root->sub_buf[i];
+// 		for (j = 0; j < SUB_MSG_NUM; j++) {
+// 			struct  nd_msg_entry_node *node = &psub->msg_buf[j];
+// 			if (node->is_script)	{
+// 				free((void*)node->entry);
+// 				node->entry = NULL;
+// 			}
+// 		}
+// 	}
 	free(root);
 }
 /* create message table 
@@ -225,23 +225,23 @@ static struct nd_msg_entry_node *_nd_msgentry_get_node_run(nd_handle handle, ndm
 	}
 	return  NULL;
 }
-
-nd_usermsg_func nd_msgentry_get_func(nd_netui_handle handle, ndmsgid_t maxid, ndmsgid_t minid)
-{
-	struct nd_msg_entry_node * node ;
-	ENTER_FUNC() ;
-	
-	node = _nd_msgentry_get_node(handle,   maxid,  minid) ;
-	LEAVE_FUNC();
-	if (!node)	{
-		return NULL;
-	}
-	if (node->is_script)	{
-		return NULL;
-	}
-	
-	return  node->entry ;
-}
+// 
+// nd_usermsg_func nd_msgentry_get_func(nd_netui_handle handle, ndmsgid_t maxid, ndmsgid_t minid)
+// {
+// 	struct nd_msg_entry_node * node ;
+// 	ENTER_FUNC() ;
+// 	
+// 	node = _nd_msgentry_get_node(handle,   maxid,  minid) ;
+// 	LEAVE_FUNC();
+// 	if (!node)	{
+// 		return NULL;
+// 	}
+// 	if (node->is_script)	{
+// 		return NULL;
+// 	}
+// 	
+// 	return  node->entry ;
+// }
 
 int nd_msgentry_is_handled(nd_handle handle, ndmsgid_t maxid, ndmsgid_t minid)
 {
@@ -272,33 +272,33 @@ const char * nd_msgentry_get_name(nd_netui_handle handle, ndmsgid_t maxid, ndmsg
 	return NULL ;
 #endif
 }
-
-NDUINT32 nd_msgentry_get_id(nd_handle handle, const char *msgname)
-{
-	int i, x;
-	struct nd_msgentry_root *root_entry = (struct nd_msgentry_root *) nd_get_msg_hadle(handle);
-	if (!root_entry){
-		return (NDUINT32)-1;
-	}
-	if (!msgname || !msgname[0]){
-		return (NDUINT32)-1;
-	}
-
-	for ( i = 0; i < root_entry->main_num; i++)	{
-		for (x = 0; x < SUB_MSG_NUM; x++){
-			struct nd_msg_entry_node*node = &(root_entry->sub_buf[i].msg_buf[x]);
-			if (!node->name[0]){
-				continue;
-			}
-			if (ndstricmp((char*)msgname, node->name)==0 ) {
-				NDUINT32 maxid = root_entry->msgid_base + i;
-				return ND_MAKE_DWORD(maxid, x);
-			}
-		}
-	}
-
-	return (NDUINT32)-1;
-}
+// 
+// NDUINT32 nd_msgentry_get_id(nd_handle handle, const char *msgname)
+// {
+// 	int i, x;
+// 	struct nd_msgentry_root *root_entry = (struct nd_msgentry_root *) nd_get_msg_hadle(handle);
+// 	if (!root_entry){
+// 		return (NDUINT32)-1;
+// 	}
+// 	if (!msgname || !msgname[0]){
+// 		return (NDUINT32)-1;
+// 	}
+// 
+// 	for ( i = 0; i < root_entry->main_num; i++)	{
+// 		for (x = 0; x < SUB_MSG_NUM; x++){
+// 			struct nd_msg_entry_node*node = &(root_entry->sub_buf[i].msg_buf[x]);
+// 			if (!node->name[0]){
+// 				continue;
+// 			}
+// 			if (ndstricmp((char*)msgname, node->name)==0 ) {
+// 				NDUINT32 maxid = root_entry->msgid_base + i;
+// 				return ND_MAKE_DWORD(maxid, x);
+// 			}
+// 		}
+// 	}
+// 
+// 	return (NDUINT32)-1;
+// }
 
 
 nd_usermsg_func nd_msgentry_get_def_func(nd_netui_handle handle) 
@@ -324,11 +324,7 @@ int nd_msgentry_install(nd_netui_handle handle, nd_usermsg_func func, ndmsgid_t 
 		node->is_script = 0;
 #if 1
 		if (name && name[0]) {
-			int len = (int)ndstrlen(name) + 1;
-			if (len > (int) sizeof(node->name)) {
-				len = sizeof(node->name);
-			}
-			ndstrncpy(node->name, name, len);
+			strncpy(node->name, name, sizeof(node->name));
 		}
 #endif
 		ret = 0 ;
@@ -349,12 +345,20 @@ int nd_msgentry_script_install(nd_handle handle, const char*script, ndmsgid_t ma
 	ENTER_FUNC();
 	node = _nd_msgentry_get_node(handle, maxid, minid);
 	if (script && script[0] && node) {
-		int len = (int)ndstrlen(script) + 1;
-		if (node->is_script && node->entry)	{
-			free(node->entry);
+ 		int len = (int)ndstrlen(script) + 1;
+		if (len >= sizeof(node->name)){
+			nd_logerror("script name %s is too long\n", script);
+			return -1;
 		}
-		node->entry = (nd_usermsg_func)malloc(len);
-		ndstrncpy((char*)node->entry, script, len);
+
+		strncpy(node->name, script, sizeof(node->name));
+		node->entry = (nd_usermsg_func) node->name;
+// 		if (node->is_script && node->entry)	{
+// 			free(node->entry);
+// 		}
+// 		node->entry = (nd_usermsg_func)malloc(len);
+// 		ndstrncpy((char*)node->entry, script, len);
+
 		node->level = level;
 		node->is_script = 1;
 		ret = 0;

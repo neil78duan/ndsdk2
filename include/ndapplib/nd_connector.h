@@ -12,10 +12,10 @@
 #include "nd_msg.h"
 
 #define CONNECT_INSTALL_MSG(connect, msgFunc, maxID, minID) \
-	(connect)->InstallMsgFunc((nd_conn_msg_entry)msgFunc, maxID, minID, #maxID"-"#minID)
+	(connect)->InstallMsgFunc((nd_conn_msg_entry)msgFunc, maxID, minID, "c++:"#msgFunc)
 
 #define CONNECT_INSTALL_MSG_INT16(connect, msgFunc, msgID) \
-	(connect)->InstallMsgFunc((nd_conn_msg_entry)msgFunc, ND_HIBYTE(msgID),ND_LOBYTE(msgID), #msgID)
+	(connect)->InstallMsgFunc((nd_conn_msg_entry)msgFunc, ND_HIBYTE(msgID),ND_LOBYTE(msgID), "c++:"#msgFunc)
 
 
 //net connector 

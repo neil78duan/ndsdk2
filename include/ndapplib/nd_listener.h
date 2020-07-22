@@ -23,10 +23,10 @@ class NDInstanceBase ;
 
 
 #define LISTENER_INSTALL_MSG(listener, msgFunc, maxID, minID, level) \
-	(listener)->InstallMsgFunc(msgFunc, maxID, minID, level, #maxID"-"#minID) 
+	(listener)->InstallMsgFunc(msgFunc, maxID, minID, level, "c++:"#msgFunc) 
 
 #define LISTENER_INSTALL_MSG_INT16(listener, msgFunc, msgID, level) \
-	(listener)->InstallMsgFunc(msgFunc, ND_HIBYTE(msgID),ND_LOBYTE(msgID),level, #msgID)
+	(listener)->InstallMsgFunc(msgFunc, ND_HIBYTE(msgID),ND_LOBYTE(msgID),level, "c++:"#msgFunc)
 
 class  ND_COMMON_CLASS NDListener : public NDObject
 {
