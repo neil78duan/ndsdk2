@@ -964,10 +964,6 @@ int NDHttpRequest::_parseOnePart(const char *partStart, size_t len)
 	_tmpParser.setParseStepIndex(1);
 	_tmpParser.InData(partStart, (int)len);
 	
-	
-	//_tmpParser._parseHeader();
-	//_tmpParser._parseBody();
-
 	const char *p = _tmpParser.getHeader("Content-Disposition");
 	if (!p) {
 		return -1;
@@ -1009,11 +1005,13 @@ int NDHttpRequest::_parseMultipart(const char *pHeaderText)
 {
 	ND_TRACE_FUNC();
 	size_t bodySize = _findBodySize();
-	if (bodySize == 0) {
+	if (bodySize == 0 || !*pHeaderText) {
+		m_parseError = true;
 		return -1;
 	}
 	const char *pbound = ndstristr(pHeaderText, "boundary=");
-	if (!pbound) {
+	if (!pbound || !*pbound) {
+		m_parseError = true;
 		return -1;
 	}
 	pbound += 9;
@@ -1021,10 +1019,6 @@ int NDHttpRequest::_parseMultipart(const char *pHeaderText)
 	boundary += pbound;
 
 	size_t boundarySize = ndstrlen(pbound) + 2;
-	if (boundarySize == 0) {
-		m_parseError = true; 
-		return -1;
-	}
 	const char *p = getBody();
 	const char *pEnd = p + bodySize;
 
@@ -1125,8 +1119,6 @@ int NDHttpResponse::ParseProtocol()
 		return 0;
 	}
 
-
-	//char buf[1024];
 	if (!p_start) {
 		return 0;
 	}
@@ -1135,11 +1127,6 @@ int NDHttpResponse::ParseProtocol()
 	p = (char*)ndstristr(p, (char*)"HTTP");
 
 	if (p) {
-// 		len = parser_fetch_data(p, buf, datasize - (int)(p - p_start));
-// 		if (len >= datasize) {
-// 			return  0;
-// 		}
-// 		p += len;
 		p += 4;//skip http ;
 		p = ndstrchr(p, ' ');
 		if (!p)	{
@@ -1147,7 +1134,7 @@ int NDHttpResponse::ParseProtocol()
 		}
 
 		m_status = (int)strtol(p, &p, 10);
-		if (!p) {
+		if (!p || !*p) {
 			return 0;
 		}
 
