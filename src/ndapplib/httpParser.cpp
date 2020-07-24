@@ -1166,6 +1166,11 @@ static int _http_connector_data_handler(nd_handle sessionHandler, void *data, si
 	return pConn->onDataRecv((char*)data, len);
 }
 
+static size_t _http_package_size(nd_handle handle, void *data)
+{
+	return 1;
+}
+
 HttpConnector::HttpConnector(bool bLongConnect) : m_port(0), m_bLongConnection(bLongConnect), m_responseOk(false), m_bSSL(false)
 {
 	
@@ -1219,6 +1224,7 @@ int HttpConnector::Open(const char *host, int port)
 		return -1;
 	}
 	nd_hook_data(m_objhandle, _http_connector_data_handler);
+	((nd_netui_handle)m_objhandle)->get_pack_size = _http_package_size;
 
 	OnInitilize();
 	return 0 ;
@@ -1252,8 +1258,8 @@ int HttpConnector::SendRequest(NDHttpRequest &request, const char *host, int por
 	ND_TRACE_FUNC();
 	if (path && *path) {
 		m_lastRequestPath = path;
-		std::string pathUrl = NDHttpParser::textToURLcode(path);
-		return _sendHttpRequest(m_objhandle, &request, pathUrl.c_str(), host, port, m_bLongConnection);
+		//std::string pathUrl = NDHttpParser::textToURLcode(path);
+		return _sendHttpRequest(m_objhandle, &request, path, host, port, m_bLongConnection);
 	}
 	else {
 		return _sendHttpRequest(m_objhandle, &request, "", host, port, m_bLongConnection);
