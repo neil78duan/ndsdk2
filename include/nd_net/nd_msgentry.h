@@ -63,9 +63,11 @@ ND_NET_API void nd_msgtable_destroy(nd_handle  handle, int flag) ;
 
 //set this message is system message which only send by other thread( in order to simulate net message from other thread)
 ND_NET_API int nd_message_set_system(nd_handle handle,  ndmsgid_t maxid, ndmsgid_t minid,int issystem) ; 
-ND_NET_API int nd_message_set_log(nd_handle handle,  ndmsgid_t maxid, ndmsgid_t minid,int is_log) ;
 
-ND_NET_API int nd_message_set_print(nd_handle nethandle, ndmsgid_t maxId, ndmsgid_t minId, int is_print);
+ND_NET_API int nd_message_set_log(nd_handle handle,  ndmsgid_t maxid, ndmsgid_t minid,int is_log) ; //log received message id and length
+ND_NET_API int nd_message_set_print(nd_handle nethandle, ndmsgid_t maxId, ndmsgid_t minId, int is_print); // printf received message data
+
+
 ND_NET_API nd_usermsg_func nd_message_set_print_entry(nd_handle handle, nd_usermsg_func entry);
 
 

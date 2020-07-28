@@ -324,7 +324,6 @@ int _logmsg(const char *func, const char *filePath, int line, int level, const c
 	char *p = buf;
 	va_list arg;
 	int done;
-	const char *file = _getfilename(filePath);
 
 	if (!nd_log_check(level)) {
 		return 0;
@@ -358,7 +357,8 @@ int _logmsg(const char *func, const char *filePath, int line, int level, const c
 #endif
 
 #ifdef	ND_LOG_WITH_SOURCE
-	if (__without_file_info == 0) {
+	if (__without_file_info == 0 && func) {
+		const char *file = _getfilename(filePath);
 		p += ndsnprintf(p, size, " %s() (%d:%s)", func, line, file);
 		size = sizeof(buf) - (p - buf);
 	}

@@ -69,6 +69,8 @@ ND_COMMON_API int nd_log_check(edg_ID logType);
 #if defined(__ND_ANDROID__)
 #include <android/log.h>
 #define NDLOG_TAG    "ndnet-log"
+
+#define nd_logbase(...) __android_log_print(ANDROID_LOG_INFO,NDLOG_TAG,__VA_ARGS__)
 #define nd_logdebug(...)  __android_log_print(ANDROID_LOG_DEBUG,NDLOG_TAG,__VA_ARGS__)
 #define nd_logmsg(...)  __android_log_print(ANDROID_LOG_INFO,NDLOG_TAG,__VA_ARGS__)
 #define nd_logwarn(...)  __android_log_print(ANDROID_LOG_WARN,NDLOG_TAG,__VA_ARGS__)
@@ -79,6 +81,8 @@ ND_COMMON_API int nd_log_check(edg_ID logType);
 #elif defined(_MSC_VER)
 
 #pragma  warning(disable: 4002)
+
+#define nd_logbase(...) _logmsg(NULL , NULL , 0 , ND_MSG  AND __VA_ARGS__)
 
 #ifdef ND_OPEN_LOG_COMMON
 #define nd_logmsg(...) _logmsg(__FUNC__ , __FILE__ , __LINE__ , ND_MSG  AND __VA_ARGS__)
@@ -122,6 +126,8 @@ ND_COMMON_API int nd_log_check(edg_ID logType);
 #else
 
 #define LOG(format, ...) fprintf(stdout, format, __VA_ARGS__)
+
+#define nd_logbase(fmt,arg...) _logmsg(NULL,NULL, 0, ND_MSG ,fmt, ##arg)
 
 #ifdef ND_OPEN_LOG_COMMON
 #define nd_logmsg(fmt,arg...) _logmsg(__FUNC__,__FILE__, __LINE__, ND_MSG ,fmt, ##arg)

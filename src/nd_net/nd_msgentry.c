@@ -470,9 +470,17 @@ int nd_srv_translate_message( nd_netui_handle connect_handle, nd_packhdr_t *msg 
 	
 	node = _nd_msgentry_get_node_run(listen_handle, usermsg->maxid, usermsg->minid);
 #ifdef ND_TRACE_MESSAGE
-	if (node && node->is_print && root_entry->print_entry) {
-		root_entry->print_entry(connect_handle, (nd_usermsgbuf_t*)msg);
+	
+	if (node && node->is_log ) {
+		nd_logbase("TRACE-Message RECV(%d, %d) length=%d\n", usermsg->maxid, usermsg->minid, usermsg->packet_hdr.length);
 	}
+
+	if (node && node->is_print)  {
+		if (root_entry->print_entry) {
+			root_entry->print_entry(connect_handle, (nd_usermsgbuf_t*)msg);
+		}
+	}
+
 #endif
 
 	if (!node || (!node->entry && !root_entry->def_entry) ){
@@ -499,13 +507,10 @@ int nd_srv_translate_message( nd_netui_handle connect_handle, nd_packhdr_t *msg 
 		}		
 	}
 
-    //nd_logmsg("TRACE Message RECV(%d, %d) length=%d %s\n", usermsg->maxid,  usermsg->minid,
-    //          usermsg->packet_hdr.length, ret==-1?"FAILED":"SUCCESS") ;
     
 #if defined(ND_TRACE_MESSAGE)
-    if (node && node->is_log) {
-        nd_logmsg("TRACE Message RECV(%d, %d) length=%d %s\n", usermsg->maxid,  usermsg->minid, 
-			usermsg->packet_hdr.length, ret==-1?"FAILED":"SUCCESS") ;
+	if (node && node->is_log) {
+		nd_logbase("TRACE-Message Handled (%d, %d)  %s\n", usermsg->maxid,  usermsg->minid, ret==-1?"FAILED":"SUCCESS") ;
     }
 #endif
 	

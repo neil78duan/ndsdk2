@@ -286,7 +286,15 @@ int NDInstanceBase::Open(int session_size )
     if (m_config.l_cfg.cloase_unauthorize){
         nd_net_set_unauthorize_handler(pListen->GetHandle(),1) ;
     }
-    
+
+	if (m_config.l_cfg.log_all_recvmsg_id) {
+		nd_message_set_log(pListen->GetHandle(), -1, -1, 1);
+	}
+
+	if (m_config.l_cfg.log_all_recv_data) {
+		nd_message_set_print(pListen->GetHandle(), -1, -1, 1);
+	}
+
 	pListen->m_inst = this ;
     
     

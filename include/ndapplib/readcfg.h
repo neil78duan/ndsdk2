@@ -25,6 +25,8 @@ struct listen_config
     int closed_unknown ;
     int cloase_unauthorize ;
 	int thread_pool_num;
+	int log_all_recvmsg_id;
+	int log_all_recv_data;
 	char bind_ip[ND_IP_TEXT_SIZE] ;
 	char listen_name[32] ;
 };
