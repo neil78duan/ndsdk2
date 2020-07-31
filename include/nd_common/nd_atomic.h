@@ -104,7 +104,7 @@ __INLINE__ int nd_compare_swap(ndatomic_t *lpDest,ndatomic_t lComp,ndatomic_t lE
 
 
 
-#elif defined(__ND_LINUX__) 
+#elif defined(__ND_LINUX__) || defined(__ND_ANDROID__)
 typedef int ndatomic_t ;
 
 #define nd_atomic_inc(x) __sync_add_and_fetch((x),1)  
@@ -123,26 +123,26 @@ static __INLINE__ ndatomic_t nd_atomic_swap(volatile ndatomic_t *p ,ndatomic_t e
 #define nd_testandset(p) __sync_fetch_and_add((p),1)
 #define nd_atomic_set(p, val)    nd_atomic_swap(p,val)
 #define nd_atomic_read(p)        (*(p))
-
-#elif defined(__ND_ANDROID__)
-typedef int32_t ndatomic_t;
-
-#define nd_atomic_inc(x) android_atomic_inc(x)  
-#define nd_atomic_dec(x) android_atomic_dec(x)  
-#define nd_atomic_add(x,y) android_atomic_add((y),(x))
-#define nd_atomic_sub(x,y) android_atomic_add(-(y),(x))
-#define nd_compare_swap(dest, cmp, exchval) android_atomic_release_cas( cmp, exchval,dest)
-static __INLINE__ ndatomic_t nd_atomic_swap(volatile ndatomic_t *p, ndatomic_t exch)
-{
-	int oldval;
-	do {
-		oldval = *p;
-	} while (!nd_compare_swap(p, oldval, exch));
-	return oldval;
-}
-#define nd_testandset(p) nd_atomic_add((p),1)
-#define nd_atomic_set(p, val)    android_atomic_release_store(val,p)
-#define nd_atomic_read(p)        android_atomic_release_load(p)
+// 
+// #elif defined(__ND_ANDROID__)
+// typedef int32_t ndatomic_t;
+// 
+// #define nd_atomic_inc(x) android_atomic_inc(x)  
+// #define nd_atomic_dec(x) android_atomic_dec(x)  
+// #define nd_atomic_add(x,y) android_atomic_add((y),(x))
+// #define nd_atomic_sub(x,y) android_atomic_add(-(y),(x))
+// #define nd_compare_swap(dest, cmp, exchval) android_atomic_release_cas( cmp, exchval,dest)
+// static __INLINE__ ndatomic_t nd_atomic_swap(volatile ndatomic_t *p, ndatomic_t exch)
+// {
+// 	int oldval;
+// 	do {
+// 		oldval = *p;
+// 	} while (!nd_compare_swap(p, oldval, exch));
+// 	return oldval;
+// }
+// #define nd_testandset(p) nd_atomic_add((p),1)
+// #define nd_atomic_set(p, val)    android_atomic_release_store(val,p)
+// #define nd_atomic_read(p)        android_atomic_release_load(p)
 
 #elif defined(__ND_BSD__)
 
