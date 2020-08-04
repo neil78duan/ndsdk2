@@ -127,6 +127,10 @@ ND_NET_API  int nd_connector_check_crypt(nd_handle net_handle) ;
  */
 ND_NET_API int nd_connector_waitmsg(nd_handle net_handle, nd_packetbuf_t *msg_hdr, ndtime_t tmout);
 
+ND_NET_API int nd_connector_check_recv_ok(nd_handle net_handle);
+ND_NET_API int nd_connector_wait(nd_netui_handle net_handle, ndtime_t tmout);
+ND_NET_API int nd_connector_fetch_data_id(nd_netui_handle handle, char*buf,size_t size, NDUINT16 *msgId, NDUINT32 *errorId);
+
 
 /* reveive data from socket ,without format
  *

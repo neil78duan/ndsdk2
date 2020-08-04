@@ -729,6 +729,12 @@ int nd_netobj_write(nd_netui_handle node, void *data, int len)
 	return ret;
 }
 
+
+int nd_connector_check_recv_ok(nd_handle net_handle)
+{
+	return  __net_fetch_msg((nd_netui_handle)net_handle, NULL) ;
+}
+
 //fetch recvd message in nd_packhdr_t format
 static int __net_fetch_msg(nd_netui_handle socket_addr, nd_packhdr_t *msgbuf)
 {
@@ -773,8 +779,10 @@ RE_FETCH:
 
 	if (socket_addr->user_define_packet) {
 		//user define packet data
-		nd_atomic_inc(&socket_addr->recv_pack_times);
-		ndlbuf_read(pbuf, msgbuf, valid_len, EBUF_SPECIFIED);
+		if (msgbuf) {
+			nd_atomic_inc(&socket_addr->recv_pack_times);
+			ndlbuf_read(pbuf, msgbuf, valid_len, EBUF_SPECIFIED);
+		}
 		//nd_packet_ntoh(msgbuf) ;
 		return valid_len;
 	}
@@ -814,8 +822,8 @@ RE_FETCH:
 		else {
 			CURRENT_IS_CRYPT(socket_addr) = 0;
 		}
+		nd_atomic_inc(&socket_addr->recv_pack_times);
 	}
-	nd_atomic_inc(&socket_addr->recv_pack_times);
 	LEAVE_FUNC();
 	return valid_len;
 }
