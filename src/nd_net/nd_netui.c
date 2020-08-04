@@ -616,7 +616,7 @@ RE_FETCH:
 		return -1;
 	}
 
-	stream_data = (nd_packhdr_t *)ndlbuf_data(pbuf);
+	stream_data = (nd_usermsghdr_t *)ndlbuf_data(pbuf);
 
 	ND_HDR_SET(&tmp_hdr, stream_data);
 	valid_len = ND_USERMSG_LEN(&tmp_hdr);
