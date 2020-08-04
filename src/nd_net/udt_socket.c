@@ -546,7 +546,7 @@ int udt_recv(nd_udt_node *socket_node, void *buffer, size_t size)
 {
 	ENTER_FUNC();
 	int ret = 0;
-	ndtime_t beginTm;
+	//ndtime_t beginTm;
 
 	UDT_RECV_USER_DATA(socket_node) = 0;
 

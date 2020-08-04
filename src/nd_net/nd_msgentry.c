@@ -73,7 +73,7 @@ static struct nd_msgentry_root *create_msgroot(int max_mainmsg, int base)
 static void destroy_msgroot(nd_handle h)
 {
 	struct nd_msgentry_root *root = (struct nd_msgentry_root *)h;
-	int i = 0;
+	//int i = 0;
 // 	for (i = 0; i < root->main_num;i++) {
 // 		int j = 0;
 // 		struct sub_msgentry *psub = &root->sub_buf[i];
