@@ -730,10 +730,6 @@ int nd_netobj_write(nd_netui_handle node, void *data, int len)
 }
 
 
-int nd_connector_check_recv_ok(nd_handle net_handle)
-{
-	return  __net_fetch_msg((nd_netui_handle)net_handle, NULL) ;
-}
 
 //fetch recvd message in nd_packhdr_t format
 static int __net_fetch_msg(nd_netui_handle socket_addr, nd_packhdr_t *msgbuf)
@@ -850,4 +846,8 @@ int nd_net_fetch_msg(nd_netui_handle socket_addr, nd_packhdr_t *msgbuf)
 	return readlen;
 }
 
+int nd_connector_check_recv_ok(nd_handle net_handle)
+{
+	return  __net_fetch_msg((nd_netui_handle)net_handle, NULL) ;
+}
 #undef ND_IMPLEMENT_HANDLE
