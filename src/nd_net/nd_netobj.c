@@ -734,8 +734,8 @@ int nd_netobj_write(nd_netui_handle node, void *data, int len)
 //fetch recvd message in nd_packhdr_t format
 static int __net_fetch_msg(nd_netui_handle socket_addr, nd_packhdr_t *msgbuf)
 {
-	ENTER_FUNC()
-		int data_len = 0, valid_len = 0;
+	ENTER_FUNC();
+	int data_len = 0, valid_len = 0;
 	nd_packhdr_t  tmp_hdr;
 	nd_netbuf_t  *pbuf;
 	nd_packhdr_t *stream_data;
@@ -755,22 +755,17 @@ RE_FETCH:
 	}
 
 	stream_data = (nd_packhdr_t *)ndlbuf_data(pbuf);
-
 	ND_HDR_SET(&tmp_hdr, stream_data);
-	//nd_hdr_ntoh(&tmp_hdr) ;
-
-	//check incoming data legnth
 	valid_len = (int)socket_addr->get_pack_size(socket_addr, &tmp_hdr);
-	//valid_len =  nd_pack_len(&tmp_hdr) ;
 
 	if (valid_len > ND_PACKET_SIZE || valid_len < _min_packet_len) {
 		socket_addr->myerrno = NDERR_BADPACKET;
 		LEAVE_FUNC();
-		return -1;	//incoming data error 
+		return -1;	
 	}
 	else if (valid_len > data_len) {
 		LEAVE_FUNC();
-		return 0;	//not enough
+		return 0;	
 	}
 
 	if (socket_addr->user_define_packet) {
@@ -779,15 +774,12 @@ RE_FETCH:
 			nd_atomic_inc(&socket_addr->recv_pack_times);
 			ndlbuf_read(pbuf, msgbuf, valid_len, EBUF_SPECIFIED);
 		}
-		//nd_packet_ntoh(msgbuf) ;
+
+		LEAVE_FUNC();
 		return valid_len;
 	}
 
-	/*if ((int)NDNETMSG_VERSION != nd_pack_version(&tmp_hdr)){
-		nd_net_message_version_error(socket_addr);
-		return -1;
-	}
-	else*/ if (tmp_hdr.ndsys_msg) {
+	if (tmp_hdr.ndsys_msg) {
 		if (-1 == nd_net_sysmsg_hander(socket_addr, (nd_sysresv_pack_t *)stream_data)) {
 			LEAVE_FUNC();
 			return -1;

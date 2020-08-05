@@ -587,83 +587,27 @@ int nd_connector_wait(nd_netui_handle net_handle,  ndtime_t tmout)
 		LEAVE_FUNC();
 		return ret;
 	}
-// 	else {
-// 		ret = nd_connector_check_recv_ok(net_handle);
-// 	}
+	else {
+		ret = nd_connector_check_recv_ok(net_handle);
+	}
 
 	LEAVE_FUNC();
 	return ret;
 
 }
 
-
-int nd_connector_fetch_data_id(nd_netui_handle handle, char*buf, size_t size, NDUINT16 *msgId, NDUINT32 *errorId)
-{
-	ENTER_FUNC();
-	int data_len = 0, valid_len = 0;
-	nd_usermsghdr_t  tmp_hdr;
-	nd_netbuf_t  *pbuf;
-	nd_usermsghdr_t *stream_data;
-
-	*msgId = -1;
-RE_FETCH:
-	pbuf = &(handle->recv_buffer);
-	data_len = (int)ndlbuf_datalen(pbuf);
-
-	if (data_len < ND_PACKET_HDR_SIZE) {
-		LEAVE_FUNC();
-		handle->myerrno = 0;
-		return -1;
-	}
-
-	stream_data = (nd_usermsghdr_t *)ndlbuf_data(pbuf);
-
-	ND_HDR_SET(&tmp_hdr, stream_data);
-	valid_len = ND_USERMSG_LEN(&tmp_hdr);
-
-	if (valid_len > ND_PACKET_SIZE || valid_len < sizeof(nd_usermsghdr_t) ) {
-		handle->myerrno = NDERR_BADPACKET;
-		LEAVE_FUNC();
-		return -1;	//incoming data error 
-	}
-	else if (valid_len > data_len) {
-		LEAVE_FUNC();
-		return -1;	//not enough
-	}
-
-	if (tmp_hdr.packet_hdr.ndsys_msg) {
-		if (-1 == nd_net_sysmsg_hander(handle, (nd_sysresv_pack_t *)stream_data)) {
-			LEAVE_FUNC();
-			return -1;
-		}
-		ndlbuf_sub_data(pbuf, valid_len);
-		valid_len = 0;
-		goto RE_FETCH;
-	}
-
-	if (size < ND_USERMSG_DATALEN(stream_data)) {
-		handle->myerrno = NDERR_LIMITED;
-		return -1;
-	}
-	*msgId = ND_MAKE_WORD(ND_USERMSG_MAXID(stream_data), ND_USERMSG_MINID(stream_data));
-	*errorId = stream_data->error_code;
-	memcpy(buf, (char*)(stream_data + 1), ND_USERMSG_DATALEN(stream_data));
-
-	ndlbuf_sub_data(pbuf, ND_USERMSG_DATALEN(stream_data));
-	handle->myerrno = 0;
-	return ND_USERMSG_DATALEN(stream_data);
-}
-
-int nd_connector_handled_data(nd_netui_handle net_handle, size_t size) 
-{
-	
-	struct nd_tcp_node *socket_addr = (struct nd_tcp_node*)net_handle ;
-
-	nd_assert(net_handle) ;
-	ndlbuf_sub_data(&(socket_addr->recv_buffer),size) ;
-	return 0 ;
-	
-}
+// 
+// 
+// int nd_connector_handled_data(nd_netui_handle net_handle, size_t size) 
+// {
+// 	
+// 	struct nd_tcp_node *socket_addr = (struct nd_tcp_node*)net_handle ;
+// 
+// 	nd_assert(net_handle) ;
+// 	ndlbuf_sub_data(&(socket_addr->recv_buffer),size) ;
+// 	return 0 ;
+// 	
+// }
 
 //
 int nd_connector_raw_waitdata(nd_netui_handle net_handle, void *buf, size_t size, ndtime_t timeout) 

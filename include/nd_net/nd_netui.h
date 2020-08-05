@@ -129,7 +129,7 @@ ND_NET_API int nd_connector_waitmsg(nd_handle net_handle, nd_packetbuf_t *msg_hd
 
 ND_NET_API int nd_connector_check_recv_ok(nd_handle net_handle);
 ND_NET_API int nd_connector_wait(nd_netui_handle net_handle, ndtime_t tmout);
-ND_NET_API int nd_connector_fetch_data_id(nd_netui_handle handle, char*buf,size_t size, NDUINT16 *msgId, NDUINT32 *errorId);
+//ND_NET_API int nd_connector_fetch_data_id(nd_netui_handle handle, char*buf,size_t size, NDUINT16 *msgId, NDUINT32 *errorId);
 
 
 /* reveive data from socket ,without format
@@ -149,7 +149,7 @@ ND_NET_API void nd_teaKeyToHostorder(tea_k *outkey, tea_k *fromNetKey) ;
 
 //set data had handled 
 //@size handled data length
-ND_NET_API int nd_connector_handled_data(nd_handle net_handle, size_t size) ;
+//ND_NET_API int nd_connector_handled_data(nd_handle net_handle, size_t size) ;
 
 
 //hook raw data 
