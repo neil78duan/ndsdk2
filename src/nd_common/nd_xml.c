@@ -1396,7 +1396,7 @@ int _parse_attr(ndxml *xml, const char *srcText)
 	do {
 		struct ndxml_attr *attrib_node;
 		char attr_name[MAX_XMLNAME_SIZE];
-		int ret;
+		//int ret;
 
 		p = ndstr_first_valid(p);
 		if (!p || !*p) {
