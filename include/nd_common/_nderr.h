@@ -91,4 +91,5 @@ ErrorElement(ERR_BAD_FILE, "the file is bad"),
 
 ErrorElement(ERR_KEY_UNMATCH, "crypt key not match,need update program"),
 ErrorElement(ERR_INITIAL_ERROR, "program initialed error,restart program"),
+ErrorElement(ERR_DATA_ERROR_IN_DB, "data error load from database-mysql"),
 ErrorElement(ERR_UNKNOWN, "unknowwing error"),
