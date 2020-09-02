@@ -39,7 +39,7 @@ private:
 };
 
 #define ND_TRACE_FUNC() NDCallTrace _tmp_func_trace(__FUNC__)
-#define ND_TRACE_FUNC_EX(name) NDCallTrace name(__FUNC__)
+#define ND_TRACE_FUNC_EX(_helperObjname, _funcname) NDCallTrace _helperObjname(_funcname)
 
 #else
 
@@ -50,7 +50,7 @@ struct NDCallTrace
 	}
 };
 #define ND_TRACE_FUNC() //
-#define ND_TRACE_FUNC_EX(name) //
+#define ND_TRACE_FUNC_EX(name, _f) //
 #endif
 
 template<class T> inline
