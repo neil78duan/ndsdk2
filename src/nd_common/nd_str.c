@@ -304,6 +304,9 @@ const char *ndstr_first_word(const char *src)
 			break;
 		}
 	}
+	if (!*src)	{
+		return NULL;
+	}
 	return src;
 }
 
