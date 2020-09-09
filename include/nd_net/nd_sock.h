@@ -98,6 +98,9 @@ ND_NET_API int nd_sockadd_in_cmp(SOCKADDR_IN *src_addr, SOCKADDR_IN *desc_addr);
 ND_NET_API int nd_socket_nonblock(ndsocket_t fd, int cmd) ; //set socket nonblock or blocl
 
 ND_NET_API const char *nd_inet_ntoa (ndip_t in, char *buff,size_t size) ;
+
+ND_NET_API const char *nd_ip_tostring(ndip_t in);
+
 ND_NET_API ndip_t nd_inet_aton(const char *ipaddr) ;
 ND_NET_API int nd_sockadd_to_ndip(SOCKADDR_IN *sockaddr, ndip_t *ip);
 #define ND_INET_NTOA(in,buff) nd_inet_ntoa(in,buff, sizeof(buff))
