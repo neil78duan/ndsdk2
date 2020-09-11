@@ -324,6 +324,13 @@ ndsocket_t nd_socket_connect(const char *host_name, short port, int sock_type, S
 	return sfd;
 }
 
+
+const char *nd_ip_tostring(ndip_t in)
+{
+	static __ndthread  char s_ipbuf[256] = { 0 };
+	return nd_inet_ntoa(in, s_ipbuf, sizeof(s_ipbuf));
+}
+
 //get ip-address from in
 const char *nd_inet_ntoa (ndip_t in, char *buffer, size_t size)
 {
