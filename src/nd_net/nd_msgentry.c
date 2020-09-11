@@ -497,7 +497,8 @@ int nd_srv_translate_message( nd_netui_handle connect_handle, nd_packhdr_t *msg 
 				ret = srv_node->error_privilage_close ? NDERR_UNHANDLED_MSG : 0 ;
 			}
 			
-			nd_logwarn("receive un-privilege message(%d , %d) \n", usermsg->maxid,  usermsg->minid) ;
+			nd_logwarn("receive un-privilege message(%d , %d) connector-privilege =%d need-privilege=%d\n", 
+				usermsg->maxid,  usermsg->minid, nd_connect_level_get(connect_handle) , node->level) ;
 		}		
 		else {
 			ret = _call_message_func(root_entry, node, (nd_usermsgbuf_t*)msg, connect_handle);

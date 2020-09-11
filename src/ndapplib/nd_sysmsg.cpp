@@ -147,7 +147,7 @@ MSG_ENTRY_INSTANCE(nd_unwrap_call_session_msgproc)
 		nd_logerror("recv wrapped message to msg proc error length to small\n");
 		return 0;
 	}
-	nd_logdebug("recved (%d,%d ) length = %d from %s wrapped by (%d, %d) direct-to-client session=%d\n",
+	nd_logdebug("recved (%d,%d ) length = %d from %s wrapped by (%d, %d) direct-to-client to-session=%d\n",
 		ND_USERMSG_MAXID(&realMsg), ND_USERMSG_MINID(&realMsg), ND_USERMSG_LEN(&realMsg),
 		netconn->getName(), inmsg.MsgMaxid(), inmsg.MsgMinid(), inmsg.MsgLength(), sid);
 
