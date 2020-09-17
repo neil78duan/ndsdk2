@@ -119,7 +119,7 @@ ND_CONNCLI_API void DestroyConnectorObj(NDIConn *pconn);
 
 ND_CONNCLI_API void* ndSetLogoutFunc(void *func);
 ND_CONNCLI_API void ndSetLogFile(const char *pathfile);
-ND_CONNCLI_API int ndSetTimeoutVal(int val);
+ND_CONNCLI_API int ndSetTimeoutVal(int msec);
 
 ND_CONNCLI_API int nd_exchange_key(nd_handle nethandle, void *output_key);
 ND_CONNCLI_API int nd_checkErrorMsg(nd_handle nethandle,  nd_usermsghdr_t *msg);
