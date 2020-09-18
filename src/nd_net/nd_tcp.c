@@ -516,7 +516,6 @@ int _tcp_node_update(struct nd_tcp_node *node)
 
 
 	if (nd_tcpnode_flush_sendbuf((nd_netui_handle)node) == 0 && node->without_alive ==0 ) {
-		alive_timeout = alive_timeout ? alive_timeout : ND_ALIVE_TIMEOUT;
 		if ((now - node->last_push) > alive_timeout){
 			nd_sysresv_pack_t alive;
 			nd_make_alive_pack(&alive);

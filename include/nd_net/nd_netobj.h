@@ -112,7 +112,7 @@ union {									\
 	nd_netbuf_t 		recv_buffer, send_buffer
 
 #define ND_NETBUF_SIZE	0x10000
-#define ND_ALIVE_TIMEOUT 30000					//send alive package time interval
+//#define ND_ALIVE_TIMEOUT 30000					//send alive package time interval
 #define ND_DFT_DISSCONN_TIMEOUT	(30*60*1000)	//default timeout 
 
 typedef struct nd_linebuf nd_netbuf_t ;
