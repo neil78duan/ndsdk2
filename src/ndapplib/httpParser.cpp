@@ -720,7 +720,7 @@ int NDHttpRequest::_parsePathInfo(const char *path)
 	ND_TRACE_FUNC();
 	char val[4096];
 	char buf[4096];
-	size_t size = ndstrlen(path);
+	//size_t size = ndstrlen(path);
 	const char *p = ndstr_nstr_ansi(path, buf, '?', sizeof(buf));
 	m_path = buf;
 
@@ -1302,7 +1302,7 @@ int HttpConnector::Update(int timeout)
 	ND_TRACE_FUNC();
 	char buf[0x10000] ;
 	
-	ndtime_t start = nd_time() ;
+	//ndtime_t start = nd_time() ;
 	int lefttime = timeout ;
 	
 	do {

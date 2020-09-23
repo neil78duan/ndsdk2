@@ -163,7 +163,7 @@ int NDInstanceBase::Create(int argc, const char *argv[])
 int NDInstanceBase::_create()
 {
 	//int i ;
-	const char *logfileName = NULL ;
+	//const char *logfileName = NULL ;
 	if (m_bCreated)	{
 		return 0;
 	}

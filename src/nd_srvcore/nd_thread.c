@@ -558,7 +558,7 @@ int _destroy_service(nd_thsrv_context_t *contex, int wait)
 	ENTER_FUNC()
 	int ret = 0;
 	struct list_head *pos,*next;
-	struct nd_srv_entry *srventry = get_srv_entry()  ;
+	//struct nd_srv_entry *srventry = get_srv_entry()  ;
 
 	nd_assert(contex);
 
@@ -698,7 +698,7 @@ int nd_thsrv_sendex(nd_thsrvid_t srvid,NDUINT32 msgid,void *data, NDUINT32 data_
 	ENTER_FUNC()
 	size_t size = data_len + sizeof(struct nd_thread_msg );
 	struct nd_thread_msg *msg_addr;	
-	struct nd_srv_entry *srventry  = get_srv_entry()  ;
+	//struct nd_srv_entry *srventry  = get_srv_entry()  ;
 	nd_thsrv_context_t *contex =(nd_thsrv_context_t *) nd_thsrv_gethandle(srvid) ;
 	if(!contex  ) {
 		LEAVE_FUNC();
@@ -763,7 +763,7 @@ int nd_thsrv_sendex(nd_thsrvid_t srvid,NDUINT32 msgid,void *data, NDUINT32 data_
 			ret = -1 ;
 		}
 		else {
-			self_contex->send_message_retval ;
+			ret = self_contex->send_message_retval ;
 		}
 	}
 	LEAVE_FUNC();
