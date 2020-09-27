@@ -143,7 +143,7 @@ int _udt_packet_handler(nd_udt_node *socket_node,struct ndudt_pocket *pocket,siz
 		break ;
 	case NDUDT_RESET:
 		socket_node->status |= NETSTAT_RESET ;
-		socket_node->myerrno = NDERR_RESET ;
+		socket_node->myerrno = NDERR_CLOSED ;
 		ret = -1 ;
 		break ;
 	default :
