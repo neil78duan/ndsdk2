@@ -8,9 +8,11 @@
 #include "nd_common/nd_common.h"
 #ifdef ND_UNIX
 //#include "nd_app.h"
+#include "nd_srvcore/nd_thread.h"
 #include <signal.h>
 
 
+void nd_instance_exit(int flag) ;
 //extern void nd_instance_exit(int flag) ;
 
 extern void nd_sys_exit(int exitcode) ;
