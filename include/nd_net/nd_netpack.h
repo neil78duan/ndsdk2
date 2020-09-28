@@ -65,10 +65,18 @@ typedef struct nd_sysresv_pack
 	NDUINT16 msgid ;
 	NDUINT16 checksum;
 }nd_sysresv_pack_t;
+
+typedef struct nd_sys_error_ntf
+{
+	nd_sysresv_pack_t syspack;
+	NDUINT16 errcode;
+}nd_sys_error_pack_t;
+
 // the message id reserved 
 enum {
 	ERSV_ALIVE_ID = 0xfb0e,
-	ERSV_VERSION_ERROR = 0xfb0f
+	ERSV_VERSION_ERROR = 0xfb0f,
+	ERSV_ERROR_NTF = 0xfb10
 };
 #pragma pack(pop)
 
