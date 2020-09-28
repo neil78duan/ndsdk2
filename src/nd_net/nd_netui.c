@@ -807,6 +807,14 @@ int nd_net_sysmsg_hander(nd_netui_handle node, nd_sysresv_pack_t *pack)
 		node->myerrno = NDERR_VERSION ;
 		return -1;
 	}
+	else if (ERSV_ERROR_NTF == pack->msgid) {
+		nd_sys_error_pack_t *errNft = (nd_sys_error_pack_t*)pack;
+		nd_logerror("nd-system-msg recv error notified \n");
+
+		nd_connector_close(node, 1);
+		node->myerrno = errNft->errcode;
+		return -1;
+	}
 	return 0;	
 }
 

@@ -118,6 +118,8 @@ ND_NET_API void nd_connector_set_crypt(nd_handle net_handle, void *key, int size
 ND_NET_API void* nd_connector_get_crypt(nd_handle net_handle, int *size);
 
 ND_NET_API  int nd_connector_check_crypt(nd_handle net_handle) ;
+
+ND_NET_API int nd_connector_ntf_sys_error(nd_handle handle, NDUINT16 errorcode);
 /*
  * wait net message 
  * on error return -1 

@@ -489,6 +489,15 @@ int nd_connector_check_crypt(nd_netui_handle net_handle)
 	return 0;
 }
 
+
+int nd_connector_ntf_sys_error(nd_handle handle, NDUINT16 errorcode)
+{
+	nd_sys_error_pack_t errpack;
+	nd_make_err_ntf_pack(&errpack, errorcode);
+	nd_logmsg("send error %d NTF to peer\n", errorcode);
+	return nd_connector_send(handle, &errpack.syspack.hdr, ESF_URGENCY);
+}
+
 //get send buf free space
 size_t nd_connector_sendlen(nd_netui_handle net_handle)
 {
