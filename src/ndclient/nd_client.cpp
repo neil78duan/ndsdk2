@@ -610,13 +610,13 @@ int ndSendAndWaitMessage(nd_handle nethandle, nd_usermsgbuf_t *sendBuf, nd_userm
 	ndtime_t start_tm = nd_time();
 	if (nd_connector_send(nethandle, (nd_packhdr_t*)sendBuf, sendFlag) <= 0) {
 		nd_object_seterror(nethandle, NDERR_WRITE);
-		nd_logerror("send data error: NDERR_WRITE\n");
+		nd_logerror("send (%d,%d) data error: NDERR_WRITE\n", ND_USERMSG_MAXID(sendBuf), ND_USERMSG_MINID(sendBuf));
 		return -1;
 	}
 RE_RECV:
 	ret = nd_connector_waitmsg(nethandle, (nd_packetbuf_t *)recvBuf, timeout);
 	if (ret <= 0 ) {
-		nd_logerror("wait message timeout\n");
+		nd_logerror("wait message (%d,%d) timeout\n", waitMaxid, waitMinid);
 		return -1;
 	}
 	else if (recvBuf->msg_hdr.packet_hdr.ndsys_msg){
