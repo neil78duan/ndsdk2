@@ -456,10 +456,10 @@ int nd_listener_close_all(nd_listen_handle listen_info)
 
 int update_connector_hub(nd_listen_handle listen_info)
 {
-	if (!listen_info->connector_hub) {
-		return -1;
+	if (listen_info->connector_hub) {
+		return update_connectors(listen_info->connector_hub);
 	}
-	return update_connectors(listen_info->connector_hub) ; 
+	return 0;
 }
 
 int update_connectors(struct node_root *pmanger)
@@ -471,7 +471,7 @@ int update_connectors(struct node_root *pmanger)
 
 	if(!pmanger|| pmanger->connect_num==0){
 		LEAVE_FUNC();
-		return -1 ;
+		return 0;
 	}
 
 	for(client = pmanger->lock_first(pmanger,&cm_iterator) ; client;	client = pmanger->lock_next(pmanger,&cm_iterator) ) {
