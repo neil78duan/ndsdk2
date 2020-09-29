@@ -254,6 +254,12 @@ int NDCliConnector::Reconnect(ndip_t& IP, int port,void *proxy)
 {
 	return ::nd_reconnect(m_objhandle,  IP,  port, (nd_proxy_info*)proxy) ;
 }
+int NDCliConnector::Reconnect(const char *address, int port, void *proxy)
+{
+	return ::nd_reconnectex(m_objhandle, address, port, (nd_proxy_info*)proxy);
+}
+
+
 int NDCliConnector::Close(int force)
 {
 	if(m_objhandle) {

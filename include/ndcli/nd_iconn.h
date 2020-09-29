@@ -46,6 +46,7 @@ public:
 	bool TestMsgIsHandle(ndmsgid_t maxid, ndmsgid_t minid) ;
 	void SetMsgNum(int maxmsg_num , int maxid_start) ;
 	int Reconnect(ndip_t& IP, int port,void *proxy=NULL)  ;//connect to another host
+	int Reconnect(const char *address, int port, void *proxy=NULL);
 	int ExchangeKey(void *output_key) ;
 	const char *ErrorDesc() ;
 	const char *ConvertErrorDesc(NDUINT32 errcode) ;
