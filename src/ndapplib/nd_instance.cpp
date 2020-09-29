@@ -535,7 +535,8 @@ int NDInstanceBase::ReadConfig(const char *configname)
 	ndxml *xmlroot ;
 	ndxml_root xmlfile;
 
-	ret = ndxml_load(config_file, &xmlfile) ;
+	//ret = ndxml_load(config_file, &xmlfile) ;
+	ret = ndxml_load_ex(config_file, &xmlfile, nd_get_encode_name(ND_ENCODE_TYPE));
 	if(0!=ret) {
 		nd_logfatal("load xml from file\n") ;
 		return -1;
