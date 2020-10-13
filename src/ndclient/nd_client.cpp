@@ -622,7 +622,7 @@ int ndSendAndWaitMessage(nd_handle nethandle, nd_usermsgbuf_t *sendBuf, nd_userm
 RE_RECV:
 	ret = nd_connector_waitmsg(nethandle, (nd_packetbuf_t *)recvBuf, timeout);
 	if (ret <= 0 ) {
-		nd_logerror("wait message (%d,%d) timeout\n", waitMaxid, waitMinid);
+		nd_logerror("wait message (%d,%d) error id=%d\n", waitMaxid, waitMinid, nd_object_lasterror(nethandle));
 		return -1;
 	}
 	else if (recvBuf->msg_hdr.packet_hdr.ndsys_msg){
