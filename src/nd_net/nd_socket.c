@@ -423,27 +423,33 @@ int nd_socket_wait_writablity(ndsocket_t fd,int timeval)
 {
 	ENTER_FUNC()
 	int ret;
-	fd_set rfds;
+	fd_set rfds,errFds;
 	struct timeval tmvel ;
 
 	FD_ZERO(&rfds) ;
 	FD_SET(fd,&rfds) ;
 
+	FD_ZERO(&errFds);
+	FD_SET(fd, &errFds);
+
 	if(-1==timeval){
-		ret = select (fd+1, NULL, &rfds,  NULL, NULL) ;
+		ret = select (fd+1, NULL, &rfds,  &errFds, NULL) ;
 	}
 	else {
 		tmvel.tv_sec = timeval/1000 ;
 		tmvel.tv_usec = (timeval%1000) * 1000;
-		ret = select (fd+1, NULL, &rfds,  NULL, &tmvel) ;
+		ret = select (fd+1, NULL, &rfds, &errFds, &tmvel) ;
 	}
 
 	if(ret <=0 ) {
 		LEAVE_FUNC() ;
-		return ret ;
+		return 0 ;
 	}
 
 	LEAVE_FUNC() ;
+	if (FD_ISSET(fd, &errFds)) {
+		return -1;
+	}
 	return FD_ISSET(fd, &rfds) ;
 }
 
@@ -522,27 +528,33 @@ int nd_socket_wait_read(ndsocket_t fd,int timeval)
 {
 	ENTER_FUNC()
 	int ret;
-	fd_set rfds;
+	fd_set rfds,errFds;
 	struct timeval tmvel ;
 
 	FD_ZERO(&rfds) ;
 	FD_SET(fd,&rfds) ;
 
+	FD_ZERO(&errFds);
+	FD_SET(fd, &errFds);
+
 	if(-1==timeval){
-		ret = select (fd+1, &rfds,NULL,   NULL, NULL) ;
+		ret = select (fd+1, &rfds,NULL, &errFds, NULL) ;
 	}
 	else {
 		tmvel.tv_sec = timeval/1000 ;
 		tmvel.tv_usec = (timeval%1000) * 1000;
-		ret = select (fd+1, &rfds,  NULL, NULL, &tmvel) ;
+		ret = select (fd+1, &rfds,  NULL, &errFds, &tmvel) ;
 	}
 
 	if(ret <=0 ) {
 		LEAVE_FUNC() ;
-		return ret ;
+		return 0 ;
 	}
 
-	LEAVE_FUNC() ;
+	LEAVE_FUNC();
+	if (FD_ISSET(fd, &errFds)) {
+		return -1;
+	}
 	return FD_ISSET(fd, &rfds) ;
 };
 

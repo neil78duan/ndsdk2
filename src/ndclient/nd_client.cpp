@@ -615,7 +615,7 @@ int ndSendAndWaitMessage(nd_handle nethandle, nd_usermsgbuf_t *sendBuf, nd_userm
 	int ret = 0;
 	ndtime_t start_tm = nd_time();
 	if (nd_connector_send(nethandle, (nd_packhdr_t*)sendBuf, sendFlag) <= 0) {
-		nd_object_seterror(nethandle, NDERR_WRITE);
+		//nd_object_seterror(nethandle, NDERR_WRITE);
 		nd_logerror("send (%d,%d) data error: NDERR_WRITE\n", ND_USERMSG_MAXID(sendBuf), ND_USERMSG_MINID(sendBuf));
 		return -1;
 	}
