@@ -75,6 +75,7 @@ typedef struct nd_sys_error_ntf
 // the message id reserved 
 enum {
 	ERSV_ALIVE_ID = 0xfb0e,
+	ERSV_ALIVE_ACK = 0xfb0d,
 	ERSV_VERSION_ERROR = 0xfb0f,
 	ERSV_ERROR_NTF = 0xfb10
 };

@@ -620,7 +620,7 @@ int NDInstanceBase::_openConnector(const char *name,NDConnector *inconnect)
 	
 	
 	if (pcof->tmout> 0) {
-		inconnect->SetConnectTimeOut(pcof->tmout) ;
+		inconnect->SetConnectTimeOut(pcof->tmout * 1000) ;
 	}
 	
 	inconnect->setName(name);

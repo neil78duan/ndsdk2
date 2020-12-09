@@ -797,10 +797,18 @@ int nd_net_sysmsg_hander(nd_netui_handle node, nd_sysresv_pack_t *pack)
 		}
 		else {			
 			nd_sysresv_pack_t alive ;
-			nd_make_alive_pack(&alive) ;
+			nd_make_alive_ack(&alive) ;
 			nd_connector_send(node, &alive.hdr, ESF_URGENCY) ;	
 		}
-		
+		nd_logdebug("connector %d recv HEART BEAT packet last-recv time=%d\n", node->session_id, node->last_recv);
+	}
+	else if (pack->msgid == ERSV_ALIVE_ACK)	{
+		if (pack->hdr.length != sizeof(nd_sysresv_pack_t) || pack->hdr.stuff_len != 5) {
+			node->myerrno = NDERR_BADPACKET;
+			nd_logerror("nd-system-msg input data error maybe net protocol is not match \n");
+			return -1;
+		}
+		nd_logdebug("connector %d recv HEART BEAT ACK time=%d\n", node->session_id, node->last_recv);
 	}
 	else if(ERSV_VERSION_ERROR==pack->msgid) {
 		nd_logerror("nd-system-msg message id error \n" ) ;

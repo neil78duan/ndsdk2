@@ -130,7 +130,7 @@ static __INLINE__ nd_handle nd_session_getlisten(nd_handle session_handle)
 int check_operate_timeout(nd_handle nethandle, ndtime_t tmout) ;
 
 int tryto_close_tcpsession(nd_handle nethandle, ndtime_t connect_tmout ) ;
-int _tcp_session_update(nd_handle handle);
+//int _tcp_session_update(nd_handle handle);
 
 /*deal with received net message*/
 /*ND_SRV_API*/ int tcp_session_do_msg(struct nd_session_tcp *cli_map, struct nd_srv_node *srv_node);

@@ -37,6 +37,17 @@ static __INLINE__ void nd_make_alive_pack(nd_sysresv_pack_t *pack)
 	pack->checksum = nd_checksum((NDUINT16 *)pack, sizeof(nd_sysresv_pack_t));
 }
 
+static __INLINE__ void nd_make_alive_ack(nd_sysresv_pack_t *pack)
+{
+	nd_hdr_init(&pack->hdr);
+	pack->hdr.length = sizeof(nd_sysresv_pack_t);
+	pack->hdr.ndsys_msg = 1;
+	pack->hdr.stuff_len = 5;
+	pack->msgid = ERSV_ALIVE_ACK;
+	pack->checksum = 0;
+	pack->checksum = nd_checksum((NDUINT16 *)pack, sizeof(nd_sysresv_pack_t));
+}
+
 static __INLINE__ void nd_make_err_ntf_pack(nd_sys_error_pack_t *errPack,NDUINT16 errcode)
 {
 	nd_sysresv_pack_t *pack = &errPack->syspack;

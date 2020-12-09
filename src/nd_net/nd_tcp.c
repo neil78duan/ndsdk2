@@ -505,31 +505,43 @@ int _tcpnode_push_sendbuf(struct nd_tcp_node *conn_node)
 int _tcp_node_update(struct nd_tcp_node *node)
 {
 	ENTER_FUNC()
-	ndtime_t now = nd_time() ;
 	int ret = 0;
 
-	int alive_timeout = node->disconn_timeout >> 1;
 	if (!node->fd || nd_object_check_error((nd_handle)node) || !TCPNODE_CHECK_OK(node)) {
 		LEAVE_FUNC();
 		return -1;
 	}
+	if (nd_tcpnode_flush_sendbuf((nd_netui_handle)node) == -1) {
+		LEAVE_FUNC();
+		return -1;
+	}
+	if (!node->is_session)	{
+		TCPNODE_TRY_CALLBACK_WRITE(node);
+	}
 
+	if ( node->without_alive ==0 ) {
+		ndtime_t now = nd_time();
+		ndtime_t intervalTm = now - node->last_recv;
 
-	if (nd_tcpnode_flush_sendbuf((nd_netui_handle)node) == 0 && node->without_alive ==0 ) {
-		if ((now - node->last_push) > alive_timeout){
+		if (intervalTm > (node->disconn_timeout >> 1) ){
 			nd_sysresv_pack_t alive;
 			nd_make_alive_pack(&alive);
 			packet_hton(&alive);
 			ret = nd_tcpnode_send(node, &alive.hdr, ESF_URGENCY);
+			if (ret >=0){
+				nd_logdebug("connector %d send heart beat pack timeoutval=%d\n", node->session_id, node->disconn_timeout);
+			}
+		}
+		else if (intervalTm > (node->disconn_timeout + (node->disconn_timeout >> 3))) {
+			node->myerrno = NDERR_TIMEOUT;
+
+			nd_logdebug("connector %d closed because time out value=%d interval = %d\n", node->session_id, node->disconn_timeout, intervalTm);
+			LEAVE_FUNC();
+			return -1;
 		}
 	}
-	TCPNODE_TRY_CALLBACK_WRITE(node);
 	
-	if (now - node->last_recv > node->disconn_timeout) {
-		node->myerrno = NDERR_TIMEOUT ;
-		LEAVE_FUNC();
-		return -1 ;
-	}
+	
 	LEAVE_FUNC();
 	return ret ;
 }
