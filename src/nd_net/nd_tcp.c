@@ -530,7 +530,7 @@ int _tcp_node_update(struct nd_tcp_node *node)
 			ret = nd_tcpnode_send(node, &alive.hdr, ESF_URGENCY);
 			if (ret >=0){
 				node->last_alive = now;
-				nd_logdebug("connector %d send heart beat pack timeoutval=%d\n", node->session_id, node->disconn_timeout);
+				//nd_logdebug("connector %d send heart beat pack timeoutval=%d\n", node->session_id, node->disconn_timeout);
 			}
 		}
 		else if (intervalTm > (node->disconn_timeout + (node->disconn_timeout >> 3))) {
