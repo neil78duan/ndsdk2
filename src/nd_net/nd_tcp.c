@@ -523,12 +523,13 @@ int _tcp_node_update(struct nd_tcp_node *node)
 		ndtime_t now = nd_time();
 		ndtime_t intervalTm = now - node->last_recv;
 
-		if (intervalTm > (node->disconn_timeout >> 1) ){
+		if (intervalTm > (node->disconn_timeout >> 1) && (now - node->last_alive) > 2000 ){
 			nd_sysresv_pack_t alive;
 			nd_make_alive_pack(&alive);
 			packet_hton(&alive);
 			ret = nd_tcpnode_send(node, &alive.hdr, ESF_URGENCY);
 			if (ret >=0){
+				node->last_alive = now;
 				nd_logdebug("connector %d send heart beat pack timeoutval=%d\n", node->session_id, node->disconn_timeout);
 			}
 		}
@@ -592,6 +593,7 @@ void _tcp_connector_init(struct nd_tcp_node *conn_node)
 	conn_node->status = ETS_DEAD;				/*socket state in game 0 not read 1 ready*/
 	conn_node->start_time =nd_time() ;		
 	conn_node->last_push = nd_time() ;
+	conn_node->last_alive = 0;
 	conn_node->disconn_timeout = ND_DFT_DISSCONN_TIMEOUT ;
 	conn_node->msg_caller = conn_node;
 	init_crypt_key(&conn_node->crypt_key);

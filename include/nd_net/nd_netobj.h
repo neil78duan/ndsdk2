@@ -107,6 +107,7 @@ union {									\
 	struct sockaddr_in6 remote_addr6;	\
 };										\
 	ndtime_t			last_push ;		\
+	ndtime_t			last_alive ;	\
 	ndtime_t			disconn_timeout;\
 	ndatomic_t			send_pack_times,recv_pack_times;\
 	nd_netbuf_t 		recv_buffer, send_buffer
