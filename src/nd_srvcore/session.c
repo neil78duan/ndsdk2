@@ -179,9 +179,11 @@ int check_operate_timeout(nd_handle nethandle, ndtime_t tmout)
 
 	struct listen_contex *lc ;
 	ndtime_t interval = nd_time() - nethandle->last_recv;
-	if(interval > tmout) {
-		return 1 ;
-	}
+// 	if(interval > tmout) {
+// 
+//		nd_logdebug("connector %d  timeoutval=%d\n", nethandle->session_id, nethandle->disconn_timeout);
+// 		return 1 ;
+// 	}
 
 	//禁止空连接
 	lc =(struct listen_contex *) nethandle->srv_root ;
@@ -222,27 +224,27 @@ int tryto_close_tcpsession(nd_handle nethandle, ndtime_t connect_tmout )
 }
 
 
-
-int _tcp_session_update(nd_handle handle)
-{
-	ENTER_FUNC();
-	int ret = _tcpnode_push_sendbuf((struct nd_tcp_node *)handle);
-	if (ret <= 0) {
-		if (nd_netobj_is_alive((nd_netui_handle)handle)) {
-			ndtime_t now = nd_time();
-			int alive_timeout = handle->disconn_timeout >> 1;
-
-			TCPNODE_TRY_CALLBACK_WRITE(handle);
-			if (now - handle->last_push > alive_timeout) {
-				nd_sysresv_pack_t alive;
-				nd_make_alive_pack(&alive);
-				ret = nd_connector_send(handle, &alive.hdr, ESF_URGENCY);
-			}
-		}
-	}
-	LEAVE_FUNC();
-	return ret ;
-}
+// 
+// int _tcp_session_update(nd_handle handle)
+// {
+//	ENTER_FUNC();
+// 	int ret = _tcpnode_push_sendbuf((struct nd_tcp_node *)handle);
+// 	if (ret <= 0) {
+// 		if (nd_netobj_is_alive((nd_netui_handle)handle)) {
+// 			ndtime_t now = nd_time();
+//			int alive_timeout = handle->disconn_timeout >> 1;
+// 
+// 			TCPNODE_TRY_CALLBACK_WRITE(handle);
+// 			if (now - handle->last_push > alive_timeout) {
+// 				nd_sysresv_pack_t alive;
+// 				nd_make_alive_pack(&alive);
+// 				ret = nd_connector_send(handle, &alive.hdr, ESF_URGENCY);
+// 			}
+// 		}
+// 	}
+// 	LEAVE_FUNC();
+// 	return ret ;
+// }
 
 #define INIT_SESSION_BUFF(session) \
 	(session)->connect_node.send_buffer.is_alloced = 0 ;	\
@@ -271,7 +273,7 @@ void nd_session_tcp_init(struct nd_session_tcp *client_map, nd_handle h_listen)
 	client_map->connect_node.msg_entry = ((struct nd_srv_node*)h_listen)->msg_entry;
 
 	client_map->connect_node.data_entry = ((struct nd_srv_node*)h_listen)->data_entry;
-	client_map->connect_node.update_entry = (net_update_entry)_tcp_session_update;
+	//client_map->connect_node.update_entry = (net_update_entry)_tcp_session_update;
 }
 void nd_session_tcp_destroy(struct nd_session_tcp *client_map)
 {

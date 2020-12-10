@@ -49,7 +49,7 @@ public :
 	
 	int CheckValid();
 	
-	void SetConnectTimeOut(int seconds) ;
+	void SetConnectTimeOut(int ms) ;
 	int Ioctl(int cmd, void *val, int *size) ;
 	
 	void SetPrivilege(int level);

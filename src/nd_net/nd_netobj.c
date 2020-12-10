@@ -509,10 +509,10 @@ size_t nd_connector_data_in_window(nd_handle net_handle)
 	return ndlbuf_datalen(&net_handle->send_buffer);
 }
 
-int nd_connector_set_timeout(nd_netui_handle net_handle, int seconds) 
+int nd_connector_set_timeout(nd_netui_handle net_handle, int ms) 
 {
 	int ret = net_handle->disconn_timeout ;
-	net_handle->disconn_timeout = seconds * 1000 ;
+	net_handle->disconn_timeout = ms  ;
 	return ret ;
 }
 

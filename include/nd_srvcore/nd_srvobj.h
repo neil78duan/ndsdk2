@@ -68,7 +68,7 @@ struct listen_contex
 	};
 	int io_mod ;						//listen module
 	int close_accept;					//do not open 'accept' function
-	ndtime_t	operate_timeout ;		//timeout between twice net read/write (if timeout session would be close)
+	ndtime_t	operate_timeout ;		//heart beat. timeout between twice net read/write (if timeout session would be close)
 	ndtime_t	empty_conn_timeout;		//time out of stat ==1 
 	volatile nd_thsrvid_t  listen_id ;			//listen thread server id
 	void	 *th_pool;							//thread pool data

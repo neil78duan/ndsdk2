@@ -162,7 +162,7 @@ ND_NET_API data_in_entry nd_hook_data(nd_handle h, data_in_entry data_entry) ;
 */
 ND_NET_API net_msg_entry nd_hook_packet(nd_handle h, net_msg_entry msg_entry) ;
 // set timeout 
-ND_NET_API int nd_connector_set_timeout(nd_netui_handle net_handle, int seconds) ;
+ND_NET_API int nd_connector_set_timeout(nd_netui_handle net_handle, int ms) ;
 
 ND_NET_API ndip_t nd_net_getip(nd_handle h);
 ND_NET_API ndport_t nd_net_getport(nd_handle h);

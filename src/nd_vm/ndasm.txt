@@ -52,3 +52,4 @@ SQRT(m)		#开方
 round(m)	取整四舍五入
 ceil(m)		向上取整
 floor(m)	向下取整
+POW(x,y)	x的y次方

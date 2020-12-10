@@ -168,10 +168,10 @@ nd_handle NDBaseConnector::GetListenerHandle()
 	return (nd_handle) (((struct netui_info*)m_objhandle)->srv_root );
 }
 
-void NDBaseConnector::SetConnectTimeOut(int seconds)
+void NDBaseConnector::SetConnectTimeOut(int ms)
 {
 	ND_TRACE_FUNC();
-	nd_connector_set_timeout((nd_netui_handle)m_objhandle,seconds) ;
+	nd_connector_set_timeout((nd_netui_handle)m_objhandle,ms) ;
 }
 
 
