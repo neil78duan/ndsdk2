@@ -8,6 +8,9 @@
 #include "nd_common/nd_common.h"
 #include "nd_common/nd_iconv.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+
 //#define MAX_FILE_SIZE 4*4096
 #define XML_H_END   0x3e2f			// /> xml node end mark
 #define XML_T_END   0x2f3c			// </ xml end node mark,big end  >
@@ -166,6 +169,26 @@ static const char* _out_replace_text(const char *src, char *outText,size_t len)
 
 	return ret;
 
+}
+
+static size_t _stream_to_file(FILE *pf, const char *stm, ...)
+{
+	size_t size,ret;
+	char buf[0x10000];
+	char *p = buf;
+	va_list arg;
+	int done;
+
+	size = sizeof(buf);
+	ret = 0;
+
+	va_start(arg, stm);
+	done = ndvsnprintf(p, size, stm, arg);
+	size -= done;
+	ret += done;
+	va_end(arg);
+	
+	return fwrite(buf, 1, ret, pf);
 }
 
 
@@ -387,71 +410,6 @@ int ndxml_load_ex(const char *file, ndxml_root *xmlroot, const char*encodeType)
 	nd_unload_file(pBuf);
 	return ret;
 
-	/*
-	int codeType = -1;
-	int ret = 0;
-	size_t size = 0;
-	char *pAddr, *pErrorAddr=0;
-	const char *pTextEncode = 0;
-	char*pBuf = nd_load_file(file, &size);
-	if (!pBuf){
-		return -1;
-	}
-	//ndxml_root *xmlroot;
-	ndxml_initroot(xmlroot);
-	if (-1 == xml_parse_fileinfo(xmlroot, pBuf, &pAddr, &pErrorAddr)) {
-		ret = -1;
-		ndxml_destroy(xmlroot);
-		show_xmlerror(file, pErrorAddr, pBuf, (size_t)size);
-		goto EXIT_ERROR ;
-	}
-	
-	pTextEncode = ndxml_getattr_val(xmlroot,"encoding");
-	if (pTextEncode && *pTextEncode){
-		if (encodeType && encodeType[0]) {
-			int nTextType = nd_get_encode_val(pTextEncode);
-			int nNeedType = nd_get_encode_val(encodeType);
-
-			nd_code_convert_func func = nd_get_code_convert(nTextType, nNeedType);
-
-			if (func){
-				char *pconvertbuf = malloc(size * 2);
-				if (!pconvertbuf)	{
-					ret = -1;
-					goto EXIT_ERROR;
-				}
-				if (func(pBuf, pconvertbuf, size * 2)) {
-					nd_unload_file(pBuf);
-					pBuf = pconvertbuf;
-					size = ndstrlen(pconvertbuf);
-				}
-				else {
-					free(pconvertbuf);
-					ret = -1;
-					goto EXIT_ERROR;
-				}
-				ndxml_setattrval(xmlroot, "encoding", encodeType);
-			}
-			codeType = ndstr_set_code(nNeedType);
-		}
-		else {
-			codeType = xml_set_code_type(xmlroot);
-		}
-	}
-		
-
-	if (-1 == xml_load_from_buf(pBuf, size, xmlroot, file)) {
-		ret = -1;
-	}
-
-	if (codeType != -1) {
-		ndstr_set_code(codeType);
-	}
-
-EXIT_ERROR :
-	nd_unload_file(pBuf);
-	return ret;
-	*/
 }
 
 void ndxml_destroy(ndxml_root *xmlroot)
@@ -588,14 +546,18 @@ int ndxml_save_ex(ndxml_root *xmlroot, const char *file,const char*header)
     FILE *fp;
     ndxml *sub_xml;
 	struct list_head *pos = xmlroot->lst_sub.next;
-    
-    fp = fopen(file, "w") ;
+#ifdef __ND_WIN__
+    fp = fopen(file, "wb") ;
+#else 
+	fp = fopen(file, "w");
+#endif
 	if (!fp) {
 		//nd_logerror("open file %s : %s\n", file, nd_last_error());
         return -1;
     }
     if (header && header[0]) {
-        ndfprintf(fp, "<?xml %s ?>\n", header) ;
+		_stream_to_file(fp, "<?xml %s ?>\n", header) ;
+
     }
     
 	while (pos != &xmlroot->lst_sub) {
@@ -2000,7 +1962,7 @@ ndxml *_create_xmlnode(const char *name, const char *value)
 static __INLINE__ void indent(FILE *fp, int deep)
 {
 	while(deep-- > 0) {
-		ndfprintf(fp,"\t"); 
+		_stream_to_file(fp,"\t");
 	}
 }
 
@@ -2041,7 +2003,7 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 	}
 
 	indent(fp,deep) ;
-	ndfprintf(fp, "<%s", xmlnode->name) ;
+	_stream_to_file(fp, "<%s", xmlnode->name) ;
 	
 	//save attribute to file 
 	pos = xmlnode->lst_attr.next ;
@@ -2054,10 +2016,10 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 			//attr_val1[xml_attr->value_size - 1] = 0;
 			nd_assert(strlen(attr_val1) < (size_t)xml_attr->value_size);
 			
-			ndfprintf(fp, " %s=\"%s\"", (char*)(xml_attr + 1), _out_replace_text(attr_val1, textBuf, value_buffer_size));
+			_stream_to_file(fp, " %s=\"%s\"", (char*)(xml_attr + 1), _out_replace_text(attr_val1, textBuf, value_buffer_size));
         }
         else {
-            ndfprintf(fp, " %s=\"\"", (char*)(xml_attr + 1)) ;
+			_stream_to_file(fp, " %s=\"\"", (char*)(xml_attr + 1)) ;
         }
 	}
 	
@@ -2065,10 +2027,10 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 	if(xmlnode->value && xmlnode->value[0]) {
 		textBuf[0] = 0;
 		nd_assert(strlen(xmlnode->value) < (size_t)xmlnode->value);
-		ndfprintf(fp, ">%s</%s>\n", _out_replace_text(xmlnode->value, textBuf, value_buffer_size), xmlnode->name);
+		_stream_to_file(fp, ">%s</%s>\n", _out_replace_text(xmlnode->value, textBuf, value_buffer_size), xmlnode->name);
 	}
 	else if (xmlnode->sub_num>0){
-		ndfprintf(fp, ">\n") ;
+		_stream_to_file(fp, ">\n") ;
 
 		pos = xmlnode->lst_sub.next ;
 		while (pos != &xmlnode->lst_sub){
@@ -2077,10 +2039,10 @@ int xml_write(ndxml *xmlnode, FILE *fp , int deep)
 			xml_write(subxml, fp , deep+1);
 		}
 		indent(fp,deep) ;
-		ndfprintf(fp, "</%s>\n", xmlnode->name) ;
+		_stream_to_file(fp, "</%s>\n", xmlnode->name) ;
 	}
 	else {
-		ndfprintf(fp, "/>\n") ;
+		_stream_to_file(fp, "/>\n") ;
 	}
 	free(textBuf);
 	return 0 ;
