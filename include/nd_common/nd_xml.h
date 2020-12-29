@@ -75,6 +75,17 @@ ND_COMMON_API int ndxml_is_empty(ndxml *node);
 ND_COMMON_API int ndxml_load(const char *file,ndxml_root *xmlroot) ;
 ND_COMMON_API int ndxml_load_ex(const char *file, ndxml_root *xmlroot,const char*encodeType);
 ND_COMMON_API int ndxml_load_from_buf(const char *fileName, const char *buf, size_t size, ndxml_root *xmlroot, const char *toEncodeType);
+
+ND_COMMON_API void ndxml_free(ndxml *xmlnode);
+//destroy 
+ND_COMMON_API void ndxml_destroy(ndxml_root *xmlroot); //destroy xmlroot's children and attributes but not free xmlroot self
+
+
+ND_COMMON_API int ndxml_save(ndxml_root *xmlroot, const char *file);
+ND_COMMON_API int ndxml_save_ex(ndxml_root *xmlroot, const char *file, const char*header);
+ND_COMMON_API int ndxml_save_encode(ndxml_root *xmlroot, const char *file, int inputCode, int outputCode);
+
+
 //get node 
 ND_COMMON_API ndxml *ndxml_getnode(ndxml_root *xmlroot, const char *name) ;
 ND_COMMON_API ndxml *ndxml_getnodei(ndxml_root *xmlroot, int index) ;
@@ -111,16 +122,6 @@ static __INLINE__ ndxml *ndxml_get_parent(ndxml *xmlnode)
 {
 	return xmlnode->parent;
 }
-
-ND_COMMON_API void ndxml_free(ndxml *xmlnode);
-//destroy 
-ND_COMMON_API void ndxml_destroy(ndxml_root *xmlroot) ; //destroy xmlroot's children and attributes but not free xmlroot self
-
-
-ND_COMMON_API int ndxml_save(ndxml_root *xmlroot, const char *file) ;
-
-ND_COMMON_API int ndxml_save_ex(ndxml_root *xmlroot, const char *file, const char*header);
-ND_COMMON_API int ndxml_save_encode(ndxml_root *xmlroot, const char *file, int inputCode, int outputCode);
 
 
 ND_COMMON_API ndxml *ndxml_copy(ndxml *node);
