@@ -182,7 +182,6 @@
     <ClInclude Include="..\..\..\include\ndapplib\nd_cmmgr.h" />
     <ClInclude Include="..\..\..\include\ndapplib\nd_connector.h" />
     <ClInclude Include="..\..\..\include\ndapplib\nd_containerXL.h" />
-    <ClInclude Include="..\..\..\include\ndapplib\nd_datatransfer.h" />
     <ClInclude Include="..\..\..\include\ndapplib\nd_httpListener.h" />
     <ClInclude Include="..\..\..\include\ndapplib\nd_iBaseObj.h" />
     <ClInclude Include="..\..\..\include\ndapplib\nd_instance.h" />

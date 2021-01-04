@@ -255,9 +255,6 @@
     <ClInclude Include="..\..\..\include\ndapplib\nd_containerXL.h">
       <Filter>include\ndapplib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\ndapplib\nd_datatransfer.h">
-      <Filter>include\ndapplib</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\ndapplib\nd_instance.h">
       <Filter>include\ndapplib</Filter>
     </ClInclude>
