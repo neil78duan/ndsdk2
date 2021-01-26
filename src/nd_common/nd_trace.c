@@ -1,4 +1,4 @@
-﻿/* file : nd_trace.c
+/* file : nd_trace.c
  * log source usage such as malloc / new / fopen etc..
  * version 1.0
  * neil
@@ -12,6 +12,7 @@
 #include "nd_common/nd_mempool.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifdef _ND_MEMORY_H_
  //use malloc in libc
@@ -177,25 +178,25 @@ void nd_sourcelog_dump()
 #undef  __LOCK
 #undef __UNLOCK
 
-#if defined(ND_FILE_TRACE) 
+//#if defined(ND_FILE_TRACE) 
+//
+//#ifdef _ND_TRACE_H_
+//#error not include nd_common.h
+//#endif
+//FILE *nd_fopen_dbg(const char *filename, const char *mode, const char *file, int line)
+//{
+//	FILE *fp = fopen(filename, mode);
+//	_source_log(fp, "fopen ", "file not closed", file, line);
+//	return fp;
+//}
+//void nd_fclose_dbg(FILE *fp)
+//{
+//	nd_assert(fp);
+//	fclose(fp);
+//	_source_release(fp);
+//}
 
-#ifdef _ND_TRACE_H_
-#error not include nd_common.h
-#endif
-FILE *nd_fopen_dbg(const char *filename, const char *mode, const char *file, int line)
-{
-	FILE *fp = fopen(filename, mode);
-	_source_log(fp, "fopen ", "file not closed", file, line);
-	return fp;
-}
-void nd_fclose_dbg(FILE *fp)
-{
-	nd_assert(fp);
-	fclose(fp);
-	_source_release(fp);
-}
-
-#endif
+//#endif
 
 #endif		//ND_DEBUG
 

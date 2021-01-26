@@ -17,15 +17,15 @@
 ND_COMMON_API int nd_sourcelog_init(void);
 ND_COMMON_API int _source_log(void *p, const char *operate, const char *msg, const char *file, int line);
 ND_COMMON_API int _source_release(void *source);
+//
+//ND_COMMON_API FILE *nd_fopen_dbg(const char *filename, const char *mode, const char *file, int line);
+//ND_COMMON_API void nd_fclose_dbg(FILE *fp);
+
 CPPAPI void nd_sourcelog_dump(void);
 #define nd_sourcelog(source, operatename,msg) _source_log(source,operatename,msg,__FILE__,__LINE__)
 #define nd_source_release(source) 	_source_release(source) 
 //define file open
 
-#if defined(ND_FILE_TRACE) 
-ND_COMMON_API FILE *nd_fopen_dbg(const char *filename, const char *mode, const char *file, int line);
-ND_COMMON_API void nd_fclose_dbg(FILE *fp);
-#endif
 
 #else
 #define nd_sourcelog(source, operatename,msg) (void)0
@@ -37,6 +37,14 @@ ND_COMMON_API void nd_fclose_dbg(FILE *fp);
 static __INLINE__ int _source_log(void *p, const char *operate, const char *msg, const char *file, int line) { return 0; }
 static __INLINE__  int _source_release(void *source) { return 0; }
 
+//static __INLINE__ FILE *nd_fopen_dbg(const char *filename, const char *mode, const char *file, int line)
+//{
+//    return fopen(filename, node) ;
+//}
+//static __INLINE__  void nd_fclose_dbg(FILE *fp)
+//{
+//    fclose(fp);
+//}
 #endif 
 
 

@@ -19,14 +19,14 @@
  //syste resource trace and log
  //when the program exit , it will get which source is not release 
  // 
-#if defined(ND_FILE_TRACE) && defined(ND_SOURCE_TRACE)
-
-#undef  fopen
-#undef  fclose
-#define fopen(filename, mod) nd_fopen_dbg(filename, mod,__FILE__,__LINE__)
-#define fclose(fp)			nd_fclose_dbg(fp)
-
-#endif
+//#if defined(ND_FILE_TRACE) && defined(ND_SOURCE_TRACE)
+//
+//#undef  fopen
+//#undef  fclose
+//#define fopen(filename, mod) nd_fopen_dbg(filename, mod,__FILE__,__LINE__)
+//#define fclose(fp)			nd_fclose_dbg(fp)
+//
+//#endif
 
 
 #endif
