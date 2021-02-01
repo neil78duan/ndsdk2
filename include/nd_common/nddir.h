@@ -75,5 +75,6 @@ ND_COMMON_API  int  nd_path_is_relative(const char *path); //check path is relat
 ND_COMMON_API  const char * nd_file_ext_name(const char *fullPath);
 ND_COMMON_API  const char * nd_file_name_without_ext(const char *fullPath,char *outbuf, size_t size);
 
+ND_COMMON_API  const char * nd_path_from_windows(char *fullPath); //convert windows style to std-unix-likes
 
 #endif

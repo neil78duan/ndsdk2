@@ -515,6 +515,19 @@ const char * nd_file_ext_name(const char *fullPath)
 	return NULL;
 }
 
+
+const char * nd_path_from_windows(char *fullPath)
+{
+	char *p = fullPath;
+	while (*p) {
+		if (*p == '\\') {
+			*p = '/';
+		}
+		++p;
+	}
+	return fullPath;
+ }
+
 const char * nd_file_name_without_ext(const char *fullPath, char *outbuf, size_t size)
 {
 	const char *begin_name = fullPath;
